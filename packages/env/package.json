@@ -1,0 +1,18 @@
+{
+  "name": "@everythingbuiltwith/env",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./web": "./src/web.ts"
+  },
+  "dependencies": {
+    "zod": "^4.3.6",
+    "@t3-oss/env-core": "^0.13.10",
+    "dotenv": "^17.2.4"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "@everythingbuiltwith/config": "workspace:*"
+  }
+}

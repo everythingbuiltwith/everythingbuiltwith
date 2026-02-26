@@ -1,0 +1,42 @@
+{
+  "name": "everythingbuiltwith",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "packages/*"
+    ],
+    "catalog": {
+      "dotenv": "^17.2.2",
+      "zod": "^4.1.13",
+      "typescript": "^5",
+      "convex": "^1.31.2"
+    }
+  },
+  "type": "module",
+  "scripts": {
+    "check": "ultracite check",
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "check-types": "turbo check-types",
+    "dev:native": "turbo -F native dev",
+    "dev:web": "turbo -F web dev",
+    "dev:server": "turbo -F @everythingbuiltwith/backend dev",
+    "dev:setup": "turbo -F @everythingbuiltwith/backend dev:setup",
+    "seed": "turbo -F @everythingbuiltwith/backend seed",
+    "fix": "ultracite fix"
+  },
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "zod": "^4.3.6",
+    "@everythingbuiltwith/env": "workspace:*"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.4.4",
+    "@everythingbuiltwith/config": "workspace:*",
+    "turbo": "^2.8.11",
+    "typescript": "^5.9.3",
+    "ultracite": "7.2.4"
+  },
+  "packageManager": "bun@1.3.4"
+}

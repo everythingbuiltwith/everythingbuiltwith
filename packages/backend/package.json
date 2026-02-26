@@ -1,0 +1,23 @@
+{
+  "name": "@everythingbuiltwith/backend",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "scripts": {
+    "dev": "convex dev",
+    "dev:setup": "convex dev --configure --until-success",
+    "seed": "convex run seed:run \"{}\""
+  },
+  "dependencies": {
+    "convex": "^1.32.0",
+    "dotenv": "^17.3.1",
+    "svix": "^1.86.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.1",
+    "typescript": "^5.9.3",
+    "@everythingbuiltwith/config": "workspace:*"
+  }
+}
