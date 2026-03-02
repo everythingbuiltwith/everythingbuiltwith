@@ -3,17 +3,10 @@ import { convexQuery } from "@convex-dev/react-query";
 import { api } from "@everythingbuiltwith/backend/convex/_generated/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import {
-  Building2,
-  GitCompareArrows,
-  type LucideIcon,
-  MessageCircle,
-  Sparkles,
-  Users,
-} from "lucide-react";
+import { format } from "date-fns";
 import { TechStackCard } from "@/components/tech-stack-card";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { staticTitle } from "./__root";
 
 export const Route = createFileRoute("/")({
@@ -27,252 +20,207 @@ export const Route = createFileRoute("/")({
   component: HomeComponent,
 });
 
+const HERO_BORDER_ICONS = [
+  { icon: "company/convex", name: "Convex", top: "5%", left: "18%" },
+  { icon: "company/linear", name: "Linear", top: "0%", left: "82%" },
+  { icon: "company/vercel", name: "Vercel", top: "30%", left: "3%" },
+  { icon: "tech/kubernetes", name: "Next.js", top: "20%", left: "97%" },
+  { icon: "tech/react", name: "Tailwind", top: "60%", left: "0%" },
+  { icon: "company/sentry", name: "Sentry", top: "70%", left: "100%" },
+  { icon: "tech/tanstack", name: "Supabase", top: "98%", left: "10%" },
+  { icon: "tech/shadcn", name: "shadcn", top: "98%", left: "90%" },
+];
+
+function HeroSection() {
+  return (
+    <section className="relative flex min-h-screen w-full items-center overflow-hidden bg-background py-16">
+      <div className="container relative z-10 mx-auto grid w-full grid-cols-1 items-center gap-12 px-6 lg:grid-cols-[1fr_auto] lg:gap-20">
+        {/* Left — text */}
+        <div className="flex max-w-2xl flex-col items-start text-left">
+          <h1 className="hero-reveal hero-reveal-1 font-bold text-4xl leading-[1.15] tracking-tight md:text-5xl lg:text-6xl">
+            Discover What Companies And Users Build With +{" "}
+            <span className="text-primary">Why</span>
+          </h1>
+          <p className="hero-reveal hero-reveal-2 mt-6 max-w-2xl text-lg text-muted-foreground leading-relaxed">
+            Explore the tech stacks behind leading companies, alongside
+            community-submitted personal stacks from users. Get curated stories,
+            practical insights, and the reasons behind every choice.
+          </p>
+          <div className="hero-reveal hero-reveal-3 mt-10">
+            <div className="flex gap-4">
+              <SignedOut>
+                <SignInButton>
+                  <Button size="lg" variant="default">
+                    Login And Explore Stacks Now
+                  </Button>
+                </SignInButton>
+              </SignedOut>
+              <SignedIn>
+                <Link to="/community-stacks">
+                  <Button size="lg" variant="default">
+                    Submit Your Own Stack Now
+                  </Button>
+                </Link>
+              </SignedIn>
+            </div>
+          </div>
+        </div>
+
+        {/* Right — stacked cube SVG with tech icons around it */}
+        <div className="hero-reveal hero-reveal-4 relative shrink-0">
+          {/* Thin light effect behind SVG */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute top-1/2 left-1/2 h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-secondary/10 blur-3xl md:h-[500px] md:w-[500px] lg:h-[580px] lg:w-[580px]"
+          />
+          {HERO_BORDER_ICONS.map((item, i) => (
+            <div
+              className="absolute z-10 -translate-x-1/2 -translate-y-1/2"
+              key={item.name}
+              style={{
+                top: item.top,
+                left: item.left,
+                animation: "hero-icon-drift 5s ease-in-out infinite both",
+                animationDelay: `${i * 0.5}s`,
+              }}
+            >
+              <div className="flex size-10 items-center justify-center rounded-xl border border-border/60 bg-card/80 shadow-lg backdrop-blur-sm">
+                <img
+                  alt={item.name}
+                  aria-hidden
+                  className="size-5 object-contain"
+                  height={20}
+                  src={`/icons/${item.icon}.svg`}
+                  width={20}
+                />
+              </div>
+            </div>
+          ))}
+          <svg
+            aria-hidden
+            className="pointer-events-none h-[380px] w-[380px] shrink-0 opacity-40 md:h-[450px] md:w-[450px] lg:h-[520px] lg:w-[520px]"
+            fill="none"
+            preserveAspectRatio="xMidYMid meet"
+            viewBox="130 30 330 355"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <title>Decorative stacked shape</title>
+            <g
+              shapeRendering="geometricPrecision"
+              stroke="#FFFFFF"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              transform="translate(295,207) scale(0.72,1.18) translate(-290,-204)"
+            >
+              <path d="M180 100 L400 80 Q415 78 425 90 L465 170 Q475 185 460 190 L240 210 Q225 212 215 200 L175 120 Q165 105 180 100 Z" />
+              <path
+                d="M165 130 L385 110 Q400 108 410 120 L450 200 Q460 215 445 220 L225 240 Q210 242 200 230 L160 150 Q150 135 165 130 Z"
+                opacity="0.85"
+              />
+              <path
+                d="M150 160 L370 140 Q385 138 395 150 L435 230 Q445 245 430 250 L210 270 Q195 272 185 260 L145 180 Q135 165 150 160 Z"
+                opacity="0.7"
+              />
+              <path
+                d="M135 190 L355 170 Q370 168 380 180 L420 260 Q430 275 415 280 L195 300 Q180 302 170 290 L130 210 Q120 195 135 190 Z"
+                opacity="0.55"
+              />
+              <path
+                d="M120 220 L340 200 Q355 198 365 210 L405 290 Q415 305 400 310 L180 330 Q165 332 155 320 L115 240 Q105 225 120 220 Z"
+                opacity="0.4"
+              />
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes hero-icon-drift {
+          0%, 100% { transform: translate(-50%, -50%) translate(0, 0); }
+          33% { transform: translate(-50%, -50%) translate(3px, -4px); }
+          66% { transform: translate(-50%, -50%) translate(-3px, 2px); }
+        }
+      `}</style>
+    </section>
+  );
+}
+
 function HomeComponent() {
   return (
     <>
       <HeroSection />
       <FeaturesSection />
       <FeaturedStacksSection />
-      <GetStartedSection />
+      <SignedOut>
+        <GetStartedSection />
+      </SignedOut>
     </>
   );
 }
 
-function HeroSection() {
-  const heroSlugs = ["convex", "linear"];
-  const { data: heroCompanies } = useSuspenseQuery(
-    convexQuery(api.queries.getCompanyCardsBySlugs, { slugs: heroSlugs })
-  );
-
-  const floatingTechIcons = [
-    {
-      icon: "tech/go",
-      position: "top-[5%] right-[10%]",
-    },
-    {
-      icon: "tech/postgres",
-      position: "top-[40%] right-[5%]",
-    },
-    {
-      icon: "company/planetscale",
-      position: "bottom-[22%] left-[20%]",
-    },
-    {
-      icon: "tech/typescript",
-      position: "bottom-[5%] left-[10%]",
-    },
-    {
-      icon: "tech/kubernetes",
-      position: "top-[55%] left-[5%]",
-    },
-    {
-      icon: "tech/react",
-      position: "top-[20%] left-[70%]",
-    },
-  ];
-
-  return (
-    <section className="relative mt-[-100px] flex min-h-screen w-full items-center overflow-hidden pt-48 pb-32">
-      <div
-        aria-hidden="true"
-        className="hero-gradient-bg absolute inset-0 z-0 h-full w-full"
-      />
-      <div
-        aria-hidden="true"
-        className="hero-grid-bg absolute inset-0 z-10 h-full w-full"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute bottom-0 left-0 z-10 h-56 w-full"
-        style={{
-          background:
-            "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.3) 70%, var(--background) 100%)",
-        }}
-      />
-      <div className="container relative z-20 mx-auto grid w-full grid-cols-1 items-center gap-24 px-6 md:grid-cols-2">
-        <div className="flex flex-col items-start gap-6 text-left">
-          <h1 className="hero-reveal hero-reveal-1 font-bold text-5xl leading-tight tracking-tighter md:text-6xl lg:text-7xl">
-            Discover What Companies And Users Build With +{" "}
-            <span className="text-primary">Why</span>
-          </h1>
-          <p className="hero-reveal hero-reveal-2 max-w-xl text-lg text-muted-foreground">
-            Explore the tech stacks behind leading companies, alongside
-            community-submitted personal stacks from users. Get curated stories,
-            practical insights, and the reasons behind every choice.
-          </p>
-          <div className="hero-reveal hero-reveal-3 mt-6 flex gap-4">
-            <SignedOut>
-              <SignInButton>
-                <Button size="lg" variant="outline">
-                  Login And Explore Stacks Now
-                </Button>
-              </SignInButton>
-            </SignedOut>
-            <SignedIn>
-              <Link to="/user/submitted-stacks">
-                <Button size="lg" variant="outline">
-                  Submit Your Own Stack Now
-                </Button>
-              </Link>
-            </SignedIn>
-          </div>
-        </div>
-        <div className="hero-reveal hero-reveal-4 relative h-[500px] sm:h-[600px] md:h-[740px]">
-          <div>
-            <div className="absolute top-0 left-0">
-              {heroCompanies[0] ? (
-                <TechStackCard {...heroCompanies[0]} />
-              ) : (
-                <TechStackCard
-                  description=""
-                  icon=""
-                  industry=""
-                  isLoading
-                  name=""
-                  slug=""
-                  teaserIcons={[]}
-                />
-              )}
-            </div>
-            <div className="absolute right-0 bottom-0">
-              {heroCompanies[1] ? (
-                <TechStackCard {...heroCompanies[1]} />
-              ) : (
-                <TechStackCard
-                  description=""
-                  icon=""
-                  industry=""
-                  isLoading
-                  name=""
-                  slug=""
-                  teaserIcons={[]}
-                />
-              )}
-            </div>
-          </div>
-          {floatingTechIcons.map((item) => (
-            <div
-              className={`absolute hidden sm:block ${item.position} transition-transform`}
-              key={item.icon}
-            >
-              <img
-                alt={`${item.icon} logo`}
-                className="size-6 sm:size-[30px]"
-                height={30}
-                src={`/icons/${item.icon}.svg`}
-                width={30}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-const features: {
-  icon: LucideIcon;
-  title: string;
-  description: string;
-  className: string;
-}[] = [
+const TIMELINE_ENTRIES = [
+  { date: "2021-06-05", icon: "/icons/tech/react.svg", label: "React" },
+  { date: "2024-09-22", icon: "/icons/tech/nextjs.svg", label: "Next.js" },
   {
-    icon: Building2,
-    title: "Company Tech Stacks",
-    description:
-      "Deep-dive into the technology choices of leading companies — from frameworks and databases to infrastructure and tooling.",
-    className: "md:col-span-2",
-  },
-  {
-    icon: Users,
-    title: "Community Stacks",
-    description:
-      "Browse personal tech stacks submitted by developers and makers. See what real people choose for their own projects.",
-    className: "",
-  },
-  {
-    icon: MessageCircle,
-    title: 'The "Why" Behind Every Choice',
-    description:
-      "Go beyond the list. Every technology comes with the reasoning and context that led to the decision.",
-    className: "",
-  },
-  {
-    icon: Sparkles,
-    title: "Curated Insights",
-    description:
-      "Get practical stories and takeaways instead of generic overviews. Learn what worked, what didn't, and why.",
-    className: "",
-  },
-  {
-    icon: GitCompareArrows,
-    title: "Stack Evolution Over Time",
-    description:
-      "Track how tech stacks evolve. See what companies migrate to, what they leave behind, and the trends shaping the industry.",
-    className: "",
+    date: "2026-02-15",
+    icon: "/icons/tech/tanstack.svg",
+    label: "Tanstack Start",
   },
 ];
 
-function FeatureCard({
-  icon: Icon,
-  title,
-  description,
-  className,
-}: (typeof features)[number]) {
-  return (
-    <div
-      className={cn(
-        "relative overflow-hidden rounded-2xl border border-border bg-card p-6 md:p-8",
-        className
-      )}
-    >
-      <div aria-hidden="true" className="feature-card-grid" />
-      <div className="relative z-10">
-        <div className="relative mb-1 w-fit">
-          <div
-            aria-hidden="true"
-            className="absolute -inset-3 rounded-full bg-primary/10 blur-xl"
-          />
-          <Icon className="relative size-8 text-primary" strokeWidth={1.5} />
-        </div>
-        <h3 className="mt-3 font-semibold text-lg tracking-tight">{title}</h3>
-        <p className="mt-2 max-w-md text-muted-foreground text-sm leading-relaxed">
-          {description}
-        </p>
-      </div>
-    </div>
-  );
-}
+const REASON_BADGES = [
+  "Developer Experience",
+  "Ecosystem & Integration",
+  "Long-Term Strategy",
+  "Performance & Architecture",
+  "Business & Product Needs",
+];
+
+const REASON_BADGE_STAIR = ["", "ml-2", "ml-4", "ml-6", "ml-8"];
+
+const FEATURE_CARD_ICONS = [
+  { icon: "/icons/tech/go.svg", name: "Golang", top: "30%", left: "10%" },
+  {
+    icon: "/icons/tech/kafka.svg",
+    name: "Kafka",
+    top: "15%",
+    left: "80%",
+  },
+  {
+    icon: "/icons/company/clerk.svg",
+    name: "Clerk",
+    top: "80%",
+    left: "20%",
+  },
+  {
+    icon: "/icons/tech/kubernetes.svg",
+    name: "Kubernetes",
+    top: "60%",
+    left: "90%",
+  },
+  {
+    icon: "/icons/tech/postgres.svg",
+    name: "Postgres",
+    top: "10%",
+    left: "30%",
+  },
+  {
+    icon: "/icons/tech/typescript.svg",
+    name: "Typescript",
+    top: "90%",
+    left: "70%",
+  },
+];
 
 function FeaturesSection() {
-  const topRowIcons: Array<{ key: string; name: string; icon: string }> = [
-    { key: "vercel", name: "Vercel", icon: "/icons/company/vercel_full.svg" },
-    { key: "linear", name: "Linear", icon: "/icons/company/linear_full.svg" },
-    {
-      key: "convex",
-      name: "Convex",
-      icon: "/icons/company/convex_full.svg",
-    },
-    { key: "sentry", name: "Sentry", icon: "/icons/company/sentry_full.svg" },
-    {
-      key: "cloudflare",
-      name: "Cloudflare",
-      icon: "/icons/company/cloudflare_full.svg",
-    },
-  ];
-  const bottomRowIcons: Array<{ key: string; name: string; icon: string }> = [
-    { key: "github", name: "GitHub", icon: "/icons/company/github_full.svg" },
-    {
-      key: "supabase-2",
-      name: "Supabase",
-      icon: "/icons/company/supabase_full.svg",
-    },
-    { key: "sentry-2", name: "Sentry", icon: "/icons/company/sentry_full.svg" },
-  ];
-
   return (
-    <section className="relative w-full py-16">
-      <div className="container mx-auto px-6">
+    <section className="relative w-full overflow-hidden py-16">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute right-0 bottom-0 left-0 h-52 bg-linear-to-t from-secondary/35 via-secondary/20 to-transparent"
+      />
+      <div className="container relative z-10 mx-auto px-6">
         <div className="mx-auto mb-12 max-w-2xl text-center">
           <h2 className="font-bold text-4xl tracking-tight md:text-5xl">
             More than just a list of tools
@@ -283,36 +231,114 @@ function FeaturesSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
-          {features.map((feature) => (
-            <FeatureCard key={feature.title} {...feature} />
-          ))}
-        </div>
-
-        <div className="mt-12 flex flex-col items-center gap-4 md:gap-5">
-          <div className="flex items-center justify-center gap-6 md:gap-10">
-            {topRowIcons.map((company) => (
+        <div className="grid grid-cols-1 gap-3 lg:grid-cols-[0.85fr_1.15fr] lg:grid-rows-2">
+          <div className="rounded-xl border border-border bg-card p-6 md:p-8 lg:row-span-2 lg:min-h-[432px]">
+            <div className="relative mb-16 flex h-52 items-center justify-center">
+              {FEATURE_CARD_ICONS.map((item) => (
+                <div
+                  className="absolute z-20 -translate-x-1/2 -translate-y-1/2"
+                  key={item.name}
+                  style={{
+                    top: item.top,
+                    left: item.left,
+                  }}
+                >
+                  <div className="flex size-9 items-center justify-center rounded-lg border border-border/70 bg-background/80 shadow-sm backdrop-blur-sm">
+                    <img
+                      alt={item.name}
+                      className="size-5 object-contain"
+                      height={20}
+                      src={item.icon}
+                      width={20}
+                    />
+                  </div>
+                </div>
+              ))}
               <img
-                alt={`${company.name} logo`}
-                className="h-5 w-auto shrink-0 object-contain md:h-7"
-                height={48}
-                key={company.key}
-                src={company.icon}
-                width={140}
+                alt="EverythingBuiltWith"
+                className="size-20 shrink-0 opacity-90 md:size-32"
+                height={96}
+                src="/everythingbuiltwith_icon_red.svg"
+                width={96}
               />
-            ))}
+            </div>
+            <div>
+              <h3 className="font-bold text-2xl tracking-tight">
+                Company & Community Stacks
+              </h3>
+              <p className="mt-2 text-muted-foreground text-sm leading-relaxed">
+                Deep-dive into leading companies' technology choices or browse
+                personal stacks submitted by real developers and makers. See
+                what teams and individuals actually build with and compare
+                approaches across the industry.
+              </p>
+            </div>
           </div>
-          <div className="flex items-center justify-center gap-6 md:gap-10">
-            {bottomRowIcons.map((company) => (
-              <img
-                alt={`${company.name} logo`}
-                className="h-5 w-auto shrink-0 object-contain md:h-7"
-                height={48}
-                key={company.key}
-                src={company.icon}
-                width={140}
-              />
-            ))}
+
+          <div className="rounded-xl border border-border bg-card p-5 md:p-6 lg:min-h-[210px]">
+            <div className="grid grid-cols-1 gap-12 md:grid-cols-[1fr_auto] md:items-stretch">
+              <div>
+                <h3 className="font-bold text-2xl tracking-tight">
+                  The <span className="text-primary">Why</span> Behind Every
+                  Choice
+                </h3>
+                <p className="mt-2 text-muted-foreground text-sm leading-relaxed">
+                  Go beyond the list. Every technology comes with the reasoning
+                  and context that led to the decision.
+                </p>
+              </div>
+              <div className="flex flex-col items-start gap-4 md:min-w-[230px]">
+                {REASON_BADGES.map((badge, index) => (
+                  <Badge
+                    className={REASON_BADGE_STAIR[index] ?? "ml-8"}
+                    key={badge}
+                    variant="secondary"
+                  >
+                    {badge}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-border bg-card p-5 md:p-6 lg:col-start-2 lg:min-h-[210px]">
+            <div className="grid grid-cols-1 gap-12 md:grid-cols-[1fr_auto] md:items-start">
+              <div>
+                <h3 className="font-bold text-2xl tracking-tight">
+                  Stack Evolution Over Time
+                </h3>
+                <p className="mt-2 text-muted-foreground text-sm leading-relaxed">
+                  Track how stacks evolve — see what companies migrate to and
+                  the trends shaping the industry.
+                </p>
+              </div>
+              <div className="relative md:min-h-[170px] md:min-w-[230px] md:self-stretch">
+                <div
+                  aria-hidden="true"
+                  className="absolute top-0 bottom-0 left-2 w-px bg-border"
+                />
+                <div className="flex h-full flex-col justify-between gap-3">
+                  {TIMELINE_ENTRIES.map((entry) => (
+                    <div
+                      className="relative flex items-center gap-2 pl-6"
+                      key={entry.label}
+                    >
+                      <span className="absolute top-1/2 left-2 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-background bg-primary" />
+                      <img
+                        alt={entry.label}
+                        className="size-5 object-contain"
+                        height={20}
+                        src={entry.icon}
+                        width={20}
+                      />
+                      <span className="text-muted-foreground text-xs">
+                        {format(new Date(entry.date), "PPP")}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

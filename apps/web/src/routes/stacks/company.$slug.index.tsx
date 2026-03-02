@@ -31,7 +31,9 @@ export const Route = createFileRoute("/stacks/company/$slug/")({
     }
 
     const stackData = await context.queryClient.ensureQueryData(
-      convexQuery(api.queries.getCompanyStackDetailsBySlug, { slug: params.slug })
+      convexQuery(api.queries.getCompanyStackDetailsBySlug, {
+        slug: params.slug,
+      })
     );
 
     return {
@@ -162,7 +164,10 @@ function RouteComponent() {
             <h2 className="font-bold text-2xl">Overview</h2>
             {canEditCompany ? (
               <Button size="sm" variant="outline">
-                <Link params={{ slug: company.slug }} to="/stacks/company/$slug/edit">
+                <Link
+                  params={{ slug: company.slug }}
+                  to="/stacks/company/$slug/edit"
+                >
                   Edit stack
                 </Link>
               </Button>
