@@ -55,6 +55,12 @@ function PrivacyPage() {
             </p>
             <ul className="list-disc space-y-2 pl-5">
               <li>
+                <strong>Consent management (c15t)</strong>: storing your consent
+                preferences in a necessary cookie (offline mode), so your choices
+                can be remembered. <strong>Legal basis</strong>: § 25(2) no. 2
+                TTDSG (strictly necessary) and Art. 6(1)(f) GDPR.
+              </li>
+              <li>
                 <strong>Website delivery & security (Vercel hosting)</strong>:
                 technical logs and access data (e.g. IP address, timestamps,
                 requested URLs, user agent). <strong>Legal basis</strong>: Art.
@@ -173,7 +179,25 @@ function PrivacyPage() {
 
         <section className="space-y-3">
           <h2 className="font-semibold text-xl tracking-tight">
-            7. Recipients & processors
+            7. Consent management (c15t)
+          </h2>
+          <div className="space-y-3 text-sm leading-relaxed">
+            <p>
+              We use <strong>c15t</strong> in offline mode to manage your cookie
+              choices. Your consent decision is stored on your device in a
+              strictly necessary cookie so your preferences can be remembered.
+            </p>
+            <p>
+              <strong>Legal basis</strong>: § 25(2) no. 2 TTDSG (strictly
+              necessary storage) and Art. 6(1)(f) GDPR (legitimate interest in
+              legally compliant consent management).
+            </p>
+          </div>
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="font-semibold text-xl tracking-tight">
+            8. Recipients & processors
           </h2>
           <div className="space-y-3 text-sm leading-relaxed">
             <p>
@@ -185,7 +209,7 @@ function PrivacyPage() {
         </section>
 
         <section className="space-y-3">
-          <h2 className="font-semibold text-xl tracking-tight">8. Retention</h2>
+          <h2 className="font-semibold text-xl tracking-tight">9. Retention</h2>
           <p className="text-sm leading-relaxed">
             We keep personal data only as long as needed for the purposes above
             or as required by law. Server logs are typically kept for a limited
@@ -197,7 +221,7 @@ function PrivacyPage() {
 
         <section className="space-y-3">
           <h2 className="font-semibold text-xl tracking-tight">
-            9. Your rights
+            10. Your rights
           </h2>
           <div className="space-y-3 text-sm leading-relaxed">
             <p>
@@ -216,7 +240,7 @@ function PrivacyPage() {
 
         <section className="space-y-3">
           <h2 className="font-semibold text-xl tracking-tight">
-            10. Updates to this policy
+            11. Updates to this policy
           </h2>
           <p className="text-sm leading-relaxed">
             We may update this policy if legal requirements or our processing

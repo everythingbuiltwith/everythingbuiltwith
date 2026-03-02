@@ -1,3 +1,8 @@
+import {
+  ConsentManagerDialog,
+  ConsentManagerProvider,
+  CookieBanner,
+} from "@c15t/react";
 import { ClerkProvider, useAuth } from "@clerk/tanstack-react-start";
 import { auth } from "@clerk/tanstack-react-start/server";
 import type { ConvexQueryClient } from "@convex-dev/react-query";
@@ -13,7 +18,8 @@ import {
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { createServerFn } from "@tanstack/react-start";
 import { ConvexProviderWithClerk } from "convex/react-clerk";
-import { PostHogProvider } from "posthog-js/react";
+import posthog from "posthog-js";
+import { useRef } from "react";
 import Footer from "../components/footer";
 import Header from "../components/header";
 import { Toaster } from "../components/ui/sonner";
@@ -24,7 +30,68 @@ export const staticTitle = " | Everything Built With";
 const posthogOptions = {
   api_host: env.VITE_PUBLIC_POSTHOG_HOST,
   defaults: "2026-01-30",
+  cookieless_mode: "on_reject",
 } as const;
+
+const consentTheme = {
+  "banner.root": {
+    style: { left: "auto", right: "1rem", bottom: "1rem" },
+  },
+  "banner.card": {
+    style: {
+      "--banner-background-color": "var(--card)",
+      "--banner-background-color-dark": "var(--card)",
+      "--banner-border-color": "var(--border)",
+      "--banner-border-color-dark": "var(--border)",
+      "--banner-border-radius": "var(--radius)",
+    },
+  },
+  "banner.header.root": {
+    style: {
+      "--banner-text-color": "var(--foreground)",
+      "--banner-text-color-dark": "var(--foreground)",
+    },
+  },
+  "banner.header.title": {
+    style: {
+      "--banner-title-color": "var(--foreground)",
+      "--banner-title-color-dark": "var(--foreground)",
+    },
+  },
+  "banner.header.description": {
+    style: {
+      "--banner-description-color": "var(--muted-foreground)",
+      "--banner-description-color-dark": "var(--muted-foreground)",
+    },
+  },
+  "banner.footer": {
+    style: {
+      "--banner-footer-background-color": "var(--muted)",
+      "--banner-footer-background-color-dark": "var(--muted)",
+    },
+  },
+  "dialog.card": {
+    style: {
+      "--dialog-background-color": "var(--card)",
+      "--dialog-background-color-dark": "var(--card)",
+      "--dialog-border-color": "var(--border)",
+      "--dialog-border-color-dark": "var(--border)",
+      "--dialog-border-radius": "var(--radius)",
+    },
+  },
+  "dialog.title": {
+    style: {
+      "--dialog-title-color": "var(--foreground)",
+      "--dialog-title-color-dark": "var(--foreground)",
+    },
+  },
+  "dialog.description": {
+    style: {
+      "--dialog-description-color": "var(--muted-foreground)",
+      "--dialog-description-color-dark": "var(--muted-foreground)",
+    },
+  },
+};
 
 const fetchClerkAuth = createServerFn({ method: "GET" }).handler(async () => {
   const clerkAuth = await auth();
@@ -89,15 +156,79 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 
 function RootDocument() {
   const context = useRouteContext({ from: Route.id });
+  const posthogInitializedRef = useRef(false);
+
+  const ensurePostHogInitialized = () => {
+    if (typeof window === "undefined" || posthogInitializedRef.current) {
+      return;
+    }
+
+    posthog.init(env.VITE_PUBLIC_POSTHOG_KEY, posthogOptions);
+    posthogInitializedRef.current = true;
+  };
+
   return (
     <ClerkProvider>
       <ConvexProviderWithClerk
         client={context.convexQueryClient.convexClient}
         useAuth={useAuth}
       >
-        <PostHogProvider
-          apiKey={env.VITE_PUBLIC_POSTHOG_KEY}
-          options={posthogOptions}
+        <ConsentManagerProvider
+          options={{
+            mode: "offline",
+            consentCategories: ["necessary", "measurement"],
+            ignoreGeoLocation: true,
+            react: {
+              colorScheme: "dark",
+            },
+            scripts: [
+              {
+                id: "posthog",
+                category: "measurement",
+                callbackOnly: true,
+              },
+            ],
+            callbacks: {
+              onConsentSet({ preferences }) {
+                if (preferences.measurement) {
+                  ensurePostHogInitialized();
+                  posthog.opt_in_capturing();
+                } else if (posthogInitializedRef.current) {
+                  posthog.opt_out_capturing();
+                  posthog.reset();
+                }
+              },
+            },
+            legalLinks: {
+              privacyPolicy: {
+                href: "/privacy",
+                label: "Privacy Policy",
+              },
+              termsOfService: {
+                href: "/terms",
+                label: "Terms of Service",
+              },
+            },
+            translations: {
+              defaultLanguage: "en",
+              translations: {
+                en: {
+                  consentTypes: {
+                    measurement: {
+                      title: "PostHog (Analytics)",
+                      description:
+                        "Product analytics to understand usage and improve the product. Requires consent under GDPR/DSGVO.",
+                    },
+                    necessary: {
+                      title: "Strictly necessary",
+                      description:
+                        "Required for core site functionality, including storing your consent choices and maintaining secure login sessions.",
+                    },
+                  },
+                },
+              },
+            },
+          }}
         >
           <html className="dark" lang="en">
             <head>
@@ -112,9 +243,17 @@ function RootDocument() {
               <Toaster />
               <TanStackRouterDevtools position="bottom-left" />
               <Scripts />
+              <CookieBanner
+                legalLinks={["privacyPolicy", "termsOfService"]}
+                theme={consentTheme}
+              />
+              <ConsentManagerDialog
+                legalLinks={["privacyPolicy", "termsOfService"]}
+                theme={consentTheme}
+              />
             </body>
           </html>
-        </PostHogProvider>
+        </ConsentManagerProvider>
       </ConvexProviderWithClerk>
     </ClerkProvider>
   );

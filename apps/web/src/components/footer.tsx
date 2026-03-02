@@ -1,6 +1,8 @@
+import { useConsentManager } from "@c15t/react";
 import { Link } from "@tanstack/react-router";
 
 export default function Footer() {
+  const { setIsPrivacyDialogOpen } = useConsentManager();
   const currentYear = new Date().getFullYear();
 
   const legalLinks = [
@@ -53,7 +55,7 @@ export default function Footer() {
 
         <div className="flex flex-col items-center gap-4 md:flex-row md:gap-6">
           <nav>
-            <ul className="flex items-center gap-4">
+            <ul className="flex flex-wrap items-center justify-center gap-4">
               {legalLinks.map((link) => (
                 <li key={link.to}>
                   <Link
@@ -64,6 +66,15 @@ export default function Footer() {
                   </Link>
                 </li>
               ))}
+              <li>
+                <button
+                  className="text-muted-foreground text-sm transition-colors hover:text-foreground"
+                  onClick={() => setIsPrivacyDialogOpen(true)}
+                  type="button"
+                >
+                  Cookie preferences
+                </button>
+              </li>
             </ul>
           </nav>
         </div>
