@@ -124,24 +124,42 @@ export function TechStackCard({
     </div>
   );
 
-  const linkProps =
-    stackType === "user" && username
-      ? { params: { username }, to: "/stacks/user/$username" as const }
-      : { params: { slug: slug ?? "" }, to: "/stacks/company/$slug" as const };
+  const hasUserLink = stackType === "user" && !!username;
+  const hasCompanyLink = stackType === "company" && !!slug;
+  const hasLink = hasUserLink || hasCompanyLink;
+
+  let linkProps:
+    | { params: { username: string }; to: "/stacks/user/$username" }
+    | { params: { slug: string }; to: "/stacks/company/$slug" }
+    | null = null;
+  if (hasUserLink && username) {
+    linkProps = { params: { username }, to: "/stacks/user/$username" };
+  } else if (hasCompanyLink && slug) {
+    linkProps = { params: { slug }, to: "/stacks/company/$slug" };
+  }
 
   const isCompany = stackType === "company";
+  let badgeText: string;
+  if (isCompany) {
+    badgeText = industry ?? "—";
+  } else if (username) {
+    badgeText = `@${username}`;
+  } else {
+    badgeText = name;
+  }
 
-  return (
-    <Link
-      className={cn(
-        "group relative flex w-full min-w-0 flex-col overflow-hidden rounded-xl border border-border bg-card ring-1 ring-foreground/5 transition-all duration-200 hover:border-primary/40 hover:ring-primary/5",
-        className
-      )}
-      {...linkProps}
-    >
+  const cardClassName = cn(
+    "group relative flex w-full min-w-0 flex-col overflow-hidden rounded-xl border border-border bg-card ring-1 ring-foreground/5 transition-all duration-200",
+    hasLink
+      ? "cursor-pointer hover:border-primary/40 hover:ring-primary/5"
+      : "cursor-default opacity-90"
+  );
+
+  const cardContent = (
+    <>
       <div className="absolute top-5 right-5 z-10">
         <Badge className="px-2.5 py-0.5" variant="secondary">
-          {isCompany ? industry : `@${username}`}
+          {badgeText}
         </Badge>
       </div>
 
@@ -154,7 +172,7 @@ export function TechStackCard({
           )}
         </div>
 
-        <p className="mb-6 min-h-[6.5rem] max-w-[260px] text-center text-[13px] text-muted-foreground leading-relaxed">
+        <p className="mb-6 min-h-26 max-w-[260px] text-center text-[13px] text-muted-foreground leading-relaxed">
           {description}
         </p>
 
@@ -162,7 +180,7 @@ export function TechStackCard({
           <TooltipProvider>
             {teaserIcons.map((tech) => (
               <Tooltip key={tech.name}>
-                <TooltipTrigger>
+                <TooltipTrigger render={<span />}>
                   <span className="flex items-center">
                     <TechnologyIcon
                       iconPath={tech.icon}
@@ -180,10 +198,30 @@ export function TechStackCard({
         </div>
       </div>
 
-      <div className="flex items-center justify-center gap-1.5 px-6 pb-5 font-medium text-primary text-sm group-hover:underline">
+      <div
+        className={cn(
+          "flex items-center justify-center gap-1.5 px-6 pb-5 font-medium text-primary text-sm",
+          hasLink && "group-hover:underline"
+        )}
+      >
         View stack
-        <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+        <ArrowRight
+          className={cn(
+            "size-3.5 transition-transform",
+            hasLink && "group-hover:translate-x-0.5"
+          )}
+        />
       </div>
-    </Link>
+    </>
   );
+
+  if (linkProps) {
+    return (
+      <Link className={cn(cardClassName, className)} {...linkProps}>
+        {cardContent}
+      </Link>
+    );
+  }
+
+  return <div className={cn(cardClassName, className)}>{cardContent}</div>;
 }

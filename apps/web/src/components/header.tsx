@@ -122,7 +122,9 @@ export default function Header() {
                       </div>
                     </NavigationMenuLink>
                   </li>
-                  <Separator className="my-1" />
+                  <li role="presentation">
+                    <Separator className="my-1" />
+                  </li>
                   <li>
                     <NavigationMenuLink
                       className="flex items-start gap-3 rounded-lg border border-transparent bg-card p-3 transition-[border-color,box-shadow] duration-200 hover:border-primary/40 hover:ring-1 hover:ring-primary/5"

@@ -160,10 +160,10 @@ function HomeComponent() {
 }
 
 const TIMELINE_ENTRIES = [
-  { date: "06/05/2021", icon: "/icons/tech/react.svg", label: "React" },
-  { date: "09/22/2024", icon: "/icons/tech/nextjs.svg", label: "Next.js" },
+  { date: "2021-06-05", icon: "/icons/tech/react.svg", label: "React" },
+  { date: "2024-09-22", icon: "/icons/tech/nextjs.svg", label: "Next.js" },
   {
-    date: "02/15/2026",
+    date: "2026-02-15",
     icon: "/icons/tech/tanstack.svg",
     label: "Tanstack Start",
   },
