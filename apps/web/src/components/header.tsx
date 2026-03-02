@@ -29,6 +29,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "./ui/navigation-menu";
+import { Separator } from "./ui/separator";
 
 export default function Header() {
   const { openUserProfile } = useClerk();
@@ -92,11 +93,11 @@ export default function Header() {
               <NavigationMenuTrigger className="font-semibold text-[15px]">
                 Stacks
               </NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul className="grid w-[420px] gap-1 p-2">
+              <NavigationMenuContent className="group-data-[viewport=false]/navigation-menu:bg-card group-data-[viewport=false]/navigation-menu:p-0 group-data-[viewport=false]/navigation-menu:shadow-none group-data-[viewport=false]/navigation-menu:ring-0">
+                <ul className="grid w-[420px] gap-0 bg-card p-2">
                   <li>
                     <NavigationMenuLink
-                      className="flex items-start gap-3 rounded-lg p-3 transition-colors hover:bg-muted"
+                      className="flex items-start gap-3 rounded-lg border border-transparent bg-card p-3 transition-[border-color,box-shadow] duration-200 hover:border-primary/40 hover:ring-1 hover:ring-primary/5"
                       render={<Link to="/company-stacks" />}
                     >
                       <div className="relative mt-0.5 shrink-0">
@@ -121,9 +122,10 @@ export default function Header() {
                       </div>
                     </NavigationMenuLink>
                   </li>
+                  <Separator className="my-1" />
                   <li>
                     <NavigationMenuLink
-                      className="flex items-start gap-3 rounded-lg p-3 transition-colors hover:bg-muted"
+                      className="flex items-start gap-3 rounded-lg border border-transparent bg-card p-3 transition-[border-color,box-shadow] duration-200 hover:border-primary/40 hover:ring-1 hover:ring-primary/5"
                       render={<Link to="/community-stacks" />}
                     >
                       <div className="relative mt-0.5 shrink-0">

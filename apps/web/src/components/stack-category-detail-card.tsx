@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { HistoryIcon, LightbulbIcon } from "lucide-react";
+import { ArrowRight, HistoryIcon, LightbulbIcon } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
@@ -100,7 +100,7 @@ export function StackCategoryDetailCard({
         </CardTitle>
       </CardHeader>
       <CardContent className="relative flex flex-1 flex-col gap-4 pt-2">
-        <div className="mb-2 flex flex-wrap items-center justify-center gap-6">
+        <div className="mb-2 flex flex-wrap items-center justify-center gap-6 rounded-lg bg-muted/40 px-4 py-3.5">
           {technologies.map((tech) => (
             <div className="flex flex-col items-center gap-1" key={tech._id}>
               <div className="flex min-h-10 items-center gap-1.5 text-4xl">
@@ -124,7 +124,7 @@ export function StackCategoryDetailCard({
         </div>
       </CardContent>
       {(hasUpdates || hasLongDescription) && (
-        <CardFooter className="mt-auto flex items-center justify-between gap-3">
+        <CardFooter className="mt-auto flex items-center justify-between gap-3 border-t-0 bg-transparent">
           {hasUpdates ? (
             <Sheet>
               <SheetTrigger>
@@ -193,11 +193,14 @@ export function StackCategoryDetailCard({
           )}
           {hasLongDescription ? (
             <Dialog>
-              <DialogTrigger>
-                <Button size="sm" variant="default">
-                  <LightbulbIcon />
+              <DialogTrigger asChild>
+                <button
+                  className="inline-flex items-center gap-1.5 font-medium text-primary text-sm hover:underline"
+                  type="button"
+                >
                   Read full context
-                </Button>
+                  <ArrowRight className="size-3.5" />
+                </button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>

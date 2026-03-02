@@ -2,7 +2,12 @@
 import { useUser } from "@clerk/tanstack-react-start";
 import { convexQuery } from "@convex-dev/react-query";
 import { api } from "@everythingbuiltwith/backend/convex/_generated/api";
-import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  notFound,
+  redirect,
+} from "@tanstack/react-router";
 import { CircleOff, Globe, type LucideIcon } from "lucide-react";
 import { toast } from "sonner";
 import { StackCategoryDetailCard } from "@/components/stack-category-detail-card";
