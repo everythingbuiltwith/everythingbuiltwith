@@ -129,7 +129,31 @@ function TermsPage() {
 
         <section className="space-y-3">
           <h2 className="font-semibold text-xl tracking-tight">
-            6. Warranty disclaimer and limitation of liability
+            6. Logos, trademarks and sponsorship disclosure
+          </h2>
+          <div className="space-y-3 text-sm leading-relaxed">
+            <p>
+              Company names, logos and marks displayed on the Service are used
+              for identification and reference purposes only. All logos,
+              trademarks and other marks are the property of their respective
+              owners.
+            </p>
+            <p>
+              Unless explicitly labeled as sponsored, paid, or promoted, listed
+              companies do not pay to be included on this website.
+            </p>
+            <p>
+              In some cases, we may receive free credits or other support from
+              a listed company. Such support is not provided in exchange for
+              listing, placement, ranking, or endorsement unless explicitly
+              stated otherwise.
+            </p>
+          </div>
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="font-semibold text-xl tracking-tight">
+            7. Warranty disclaimer and limitation of liability
           </h2>
           <div className="space-y-3 text-sm leading-relaxed">
             <p>
@@ -154,7 +178,7 @@ function TermsPage() {
         </section>
 
         <section className="space-y-3">
-          <h2 className="font-semibold text-xl tracking-tight">7. Privacy</h2>
+          <h2 className="font-semibold text-xl tracking-tight">8. Privacy</h2>
           <p className="text-sm leading-relaxed">
             Information about how we process personal data is available in our
             Privacy Policy.
@@ -163,7 +187,7 @@ function TermsPage() {
 
         <section className="space-y-3">
           <h2 className="font-semibold text-xl tracking-tight">
-            8. Governing law and venue
+            9. Governing law and venue
           </h2>
           <p className="text-sm leading-relaxed">
             German law applies, excluding the UN Convention on Contracts for the
@@ -175,7 +199,7 @@ function TermsPage() {
         </section>
 
         <section className="space-y-3">
-          <h2 className="font-semibold text-xl tracking-tight">9. Contact</h2>
+          <h2 className="font-semibold text-xl tracking-tight">10. Contact</h2>
           <p className="text-sm leading-relaxed">
             If you have questions about these Terms, contact us at{" "}
             <strong>contact@everythingbuiltwith.com</strong>.
