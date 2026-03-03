@@ -5,6 +5,7 @@ export const env = createEnv({
   clientPrefix: "VITE_",
   client: {
     VITE_CONVEX_URL: z.url(),
+    VITE_PUBLIC_SITE_URL: z.url(),
     VITE_CLERK_PUBLISHABLE_KEY: z.string().min(1),
     VITE_PUBLIC_POSTHOG_KEY: z.string().min(1),
     VITE_PUBLIC_POSTHOG_HOST: z.string().min(1),

@@ -2,6 +2,7 @@
 import { useUser } from "@clerk/tanstack-react-start";
 import { convexQuery } from "@convex-dev/react-query";
 import { api } from "@everythingbuiltwith/backend/convex/_generated/api";
+import { env } from "@everythingbuiltwith/env/web";
 import {
   createFileRoute,
   Link,
@@ -21,6 +22,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import { trimTrailingSlash, truncate } from "@/lib/og";
 import { staticTitle } from "../__root";
 
 interface SocialLink {
@@ -91,15 +93,74 @@ export const Route = createFileRoute("/stacks/user/$username/")({
       })
     );
   },
-  head: ({ loaderData }) => ({
-    meta: [
-      {
-        title: loaderData
-          ? `${loaderData.user.name} Tech Stack${staticTitle}`
-          : `User Tech Stack${staticTitle}`,
-      },
-    ],
-  }),
+  head: ({ loaderData }) => {
+    const siteUrl = trimTrailingSlash(env.VITE_PUBLIC_SITE_URL);
+    const pageTitle = loaderData
+      ? `${loaderData.user.name} Tech Stack${staticTitle}`
+      : `User Tech Stack${staticTitle}`;
+    const description = loaderData
+      ? truncate(
+          loaderData.user.description ||
+            `Discover ${loaderData.user.name}'s current tech stack on Everything Built With.`,
+          160
+        )
+      : "Discover user tech stacks on Everything Built With.";
+    const username = loaderData?.user.username;
+    const pageUrl = username
+      ? `${siteUrl}/stacks/user/${encodeURIComponent(username)}`
+      : `${siteUrl}/stacks/user`;
+    const ogImageUrl = username
+      ? `${siteUrl}/api/og/user/${encodeURIComponent(username)}`
+      : `${siteUrl}/api/og/user/unknown`;
+
+    return {
+      meta: [
+        {
+          title: pageTitle,
+        },
+        {
+          name: "description",
+          content: description,
+        },
+        {
+          property: "og:title",
+          content: pageTitle.replace(staticTitle, ""),
+        },
+        {
+          property: "og:description",
+          content: description,
+        },
+        {
+          property: "og:type",
+          content: "profile",
+        },
+        {
+          property: "og:url",
+          content: pageUrl,
+        },
+        {
+          property: "og:image",
+          content: ogImageUrl,
+        },
+        {
+          name: "twitter:card",
+          content: "summary_large_image",
+        },
+        {
+          name: "twitter:title",
+          content: pageTitle.replace(staticTitle, ""),
+        },
+        {
+          name: "twitter:description",
+          content: description,
+        },
+        {
+          name: "twitter:image",
+          content: ogImageUrl,
+        },
+      ],
+    };
+  },
   notFoundComponent: UserStackNotFound,
   component: RouteComponent,
 });

@@ -22,6 +22,7 @@ import { Route as StacksUserUsernameIndexRouteImport } from './routes/stacks/use
 import { Route as StacksCompanySlugIndexRouteImport } from './routes/stacks/company.$slug.index'
 import { Route as StacksUserUsernameEditRouteImport } from './routes/stacks/user.$username.edit'
 import { Route as StacksCompanySlugEditRouteImport } from './routes/stacks/company.$slug.edit'
+import { Route as ApiOgUserUsernameRouteImport } from './routes/api/og/user.$username'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -88,6 +89,11 @@ const StacksCompanySlugEditRoute = StacksCompanySlugEditRouteImport.update({
   path: '/edit',
   getParentRoute: () => StacksCompanySlugRoute,
 } as any)
+const ApiOgUserUsernameRoute = ApiOgUserUsernameRouteImport.update({
+  id: '/api/og/user/$username',
+  path: '/api/og/user/$username',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -99,6 +105,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/stacks/company/$slug': typeof StacksCompanySlugRouteWithChildren
   '/stacks/user/$username': typeof StacksUserUsernameRouteWithChildren
+  '/api/og/user/$username': typeof ApiOgUserUsernameRoute
   '/stacks/company/$slug/edit': typeof StacksCompanySlugEditRoute
   '/stacks/user/$username/edit': typeof StacksUserUsernameEditRoute
   '/stacks/company/$slug/': typeof StacksCompanySlugIndexRoute
@@ -112,6 +119,7 @@ export interface FileRoutesByTo {
   '/imprint': typeof ImprintRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/api/og/user/$username': typeof ApiOgUserUsernameRoute
   '/stacks/company/$slug/edit': typeof StacksCompanySlugEditRoute
   '/stacks/user/$username/edit': typeof StacksUserUsernameEditRoute
   '/stacks/company/$slug': typeof StacksCompanySlugIndexRoute
@@ -128,6 +136,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/stacks/company/$slug': typeof StacksCompanySlugRouteWithChildren
   '/stacks/user/$username': typeof StacksUserUsernameRouteWithChildren
+  '/api/og/user/$username': typeof ApiOgUserUsernameRoute
   '/stacks/company/$slug/edit': typeof StacksCompanySlugEditRoute
   '/stacks/user/$username/edit': typeof StacksUserUsernameEditRoute
   '/stacks/company/$slug/': typeof StacksCompanySlugIndexRoute
@@ -145,6 +154,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/stacks/company/$slug'
     | '/stacks/user/$username'
+    | '/api/og/user/$username'
     | '/stacks/company/$slug/edit'
     | '/stacks/user/$username/edit'
     | '/stacks/company/$slug/'
@@ -158,6 +168,7 @@ export interface FileRouteTypes {
     | '/imprint'
     | '/privacy'
     | '/terms'
+    | '/api/og/user/$username'
     | '/stacks/company/$slug/edit'
     | '/stacks/user/$username/edit'
     | '/stacks/company/$slug'
@@ -173,6 +184,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/stacks/company/$slug'
     | '/stacks/user/$username'
+    | '/api/og/user/$username'
     | '/stacks/company/$slug/edit'
     | '/stacks/user/$username/edit'
     | '/stacks/company/$slug/'
@@ -189,6 +201,7 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   StacksCompanySlugRoute: typeof StacksCompanySlugRouteWithChildren
   StacksUserUsernameRoute: typeof StacksUserUsernameRouteWithChildren
+  ApiOgUserUsernameRoute: typeof ApiOgUserUsernameRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -284,6 +297,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StacksCompanySlugEditRouteImport
       parentRoute: typeof StacksCompanySlugRoute
     }
+    '/api/og/user/$username': {
+      id: '/api/og/user/$username'
+      path: '/api/og/user/$username'
+      fullPath: '/api/og/user/$username'
+      preLoaderRoute: typeof ApiOgUserUsernameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -323,6 +343,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermsRoute: TermsRoute,
   StacksCompanySlugRoute: StacksCompanySlugRouteWithChildren,
   StacksUserUsernameRoute: StacksUserUsernameRouteWithChildren,
+  ApiOgUserUsernameRoute: ApiOgUserUsernameRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
