@@ -38,13 +38,26 @@ function EmptyMedia({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function EmptyTitle({ className, ...props }: React.ComponentProps<"h3">) {
+function EmptyTitle({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<"h3">) {
+  const hasTitleContent =
+    typeof children === "string"
+      ? children.trim().length > 0
+      : typeof children === "boolean"
+        ? false
+        : children != null
+
   return (
     <h3
       data-slot="empty-title"
       className={cn("font-semibold text-2xl tracking-tight", className)}
       {...props}
-    />
+    >
+      {hasTitleContent ? children : <span className="sr-only">Empty state title</span>}
+    </h3>
   )
 }
 

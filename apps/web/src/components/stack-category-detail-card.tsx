@@ -60,6 +60,8 @@ interface StackCategoryDetailCardProps {
   updates?: TechUpdateEntry[];
 }
 
+const EMPTY_UPDATES: TechUpdateEntry[] = [];
+
 const markdownSchema = {
   ...defaultSchema,
   tagNames: [...(defaultSchema.tagNames ?? []), "u"],
@@ -76,7 +78,7 @@ export function StackCategoryDetailCard({
   shortDescription,
   longDescription,
   technologies,
-  updates = [],
+  updates = EMPTY_UPDATES,
 }: StackCategoryDetailCardProps) {
   const updateCount = updates.length;
   const hasUpdates = updateCount > 0;

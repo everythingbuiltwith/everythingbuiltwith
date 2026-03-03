@@ -99,7 +99,7 @@ const fetchClerkAuth = createServerFn({ method: "GET" }).handler(async () => {
   return { userId: clerkAuth.userId, token };
 });
 
-export interface RouterAppContext {
+interface RouterAppContext {
   convexQueryClient: ConvexQueryClient;
   queryClient: QueryClient;
 }
