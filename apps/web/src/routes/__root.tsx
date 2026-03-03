@@ -31,7 +31,6 @@ export const staticTitle = " | Everything Built With";
 const posthogOptions = {
   api_host: env.VITE_PUBLIC_POSTHOG_HOST,
   defaults: "2026-01-30",
-  cookieless_mode: "on_reject",
 } as const;
 
 const consentTheme = {
