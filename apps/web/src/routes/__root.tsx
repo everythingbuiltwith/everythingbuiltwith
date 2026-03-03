@@ -2,6 +2,7 @@ import {
   ConsentManagerDialog,
   ConsentManagerProvider,
   CookieBanner,
+  useConsentManager,
 } from "@c15t/react";
 import { ClerkProvider, useAuth } from "@clerk/tanstack-react-start";
 import { auth } from "@clerk/tanstack-react-start/server";
@@ -19,7 +20,7 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { createServerFn } from "@tanstack/react-start";
 import { ConvexProviderWithClerk } from "convex/react-clerk";
 import posthog from "posthog-js";
-import { useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import Footer from "../components/footer";
 import Header from "../components/header";
 import { Toaster } from "../components/ui/sonner";
@@ -154,18 +155,35 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
   },
 });
 
+function PostHogConsentRestore({
+  ensurePostHogInitialized,
+}: {
+  ensurePostHogInitialized: () => void;
+}) {
+  const { has } = useConsentManager();
+
+  useEffect(() => {
+    if (has("measurement")) {
+      ensurePostHogInitialized();
+      posthog.opt_in_capturing();
+    }
+  }, [has, ensurePostHogInitialized]);
+
+  return null;
+}
+
 function RootDocument() {
   const context = useRouteContext({ from: Route.id });
   const posthogInitializedRef = useRef(false);
 
-  const ensurePostHogInitialized = () => {
+  const ensurePostHogInitialized = useCallback(() => {
     if (typeof window === "undefined" || posthogInitializedRef.current) {
       return;
     }
 
     posthog.init(env.VITE_PUBLIC_POSTHOG_KEY, posthogOptions);
     posthogInitializedRef.current = true;
-  };
+  }, []);
 
   return (
     <ClerkProvider>
@@ -230,6 +248,9 @@ function RootDocument() {
             },
           }}
         >
+          <PostHogConsentRestore
+            ensurePostHogInitialized={ensurePostHogInitialized}
+          />
           <html className="dark" lang="en">
             <head>
               <HeadContent />
