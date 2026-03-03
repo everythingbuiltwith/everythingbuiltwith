@@ -44,7 +44,11 @@ function EmptyTitle({
   ...props
 }: React.ComponentProps<"h3">) {
   const hasTitleContent =
-    typeof children === "string" ? children.trim().length > 0 : children != null
+    typeof children === "string"
+      ? children.trim().length > 0
+      : typeof children === "boolean"
+        ? false
+        : children != null
 
   return (
     <h3

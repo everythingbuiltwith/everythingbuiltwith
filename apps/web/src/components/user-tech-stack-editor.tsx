@@ -82,8 +82,11 @@ const createProfileState = (
 });
 const normalizeUsageLinks = (links: UsageLinkDraft[]) =>
   links
-    .map((l) => ({ label: l.label.trim(), url: l.url.trim() }))
+    .map((l) => ({ id: l.id, label: l.label.trim(), url: l.url.trim() }))
     .filter((l) => l.label.length > 0 && l.url.length > 0);
+
+const toUsageLinkPayload = (links: UsageLinkDraft[]): UsageLink[] =>
+  links.map(({ label, url }) => ({ label, url }));
 
 export function UserTechStackEditor({
   username,
@@ -108,12 +111,13 @@ export function UserTechStackEditor({
     api.mutations.deleteUserTechnologyDeprecationUpdate
   );
   const createTechnology = useMutation(api.mutations.createTechnology);
-  const [profileDraft, setProfileDraft] = useState<ProfileState>(() =>
+  const [initialProfileState] = useState<ProfileState>(() =>
     createProfileState(profile)
   );
-  const [savedProfile, setSavedProfile] = useState<ProfileState>(() =>
-    createProfileState(profile)
-  );
+  const [profileDraft, setProfileDraft] =
+    useState<ProfileState>(initialProfileState);
+  const [savedProfile, setSavedProfile] =
+    useState<ProfileState>(initialProfileState);
   const [isSavingProfile, setIsSavingProfile] = useState(false);
   const isProfileDirty =
     JSON.stringify(profileDraft) !== JSON.stringify(savedProfile);
@@ -122,7 +126,10 @@ export function UserTechStackEditor({
     setIsSavingProfile(true);
     try {
       const usageLinks = normalizeUsageLinks(profileDraft.usageLinks);
-      await saveProfile({ ...profileDraft, usageLinks });
+      await saveProfile({
+        ...profileDraft,
+        usageLinks: toUsageLinkPayload(usageLinks),
+      });
       const next = { ...profileDraft, usageLinks };
       setProfileDraft(next);
       setSavedProfile(next);
