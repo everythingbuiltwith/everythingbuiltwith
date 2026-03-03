@@ -51,6 +51,11 @@ export default function Footer() {
           <p className="text-muted-foreground text-sm">
             &copy; {currentYear} everythingbuiltwith.com. All rights reserved.
           </p>
+          <p className="max-w-md text-center text-muted-foreground text-xs md:text-left">
+            Company logos are shown for identification only. Unless marked as
+            sponsored, companies do not pay to be listed; occasional credits or
+            support do not affect listings.
+          </p>
         </div>
 
         <div className="flex flex-col items-center gap-4 md:flex-row md:gap-6">
