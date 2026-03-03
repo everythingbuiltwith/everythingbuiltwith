@@ -84,10 +84,10 @@ export function CompanyTechStackEditor({
     api.mutations.deleteCompanyTechnologyDeprecationUpdate
   );
   const createTechnology = useMutation(api.mutations.createTechnology);
-  const [companyDraft, setCompanyDraft] = useState<CompanyDraft>(
+  const [companyDraft, setCompanyDraft] = useState<CompanyDraft>(() =>
     createCompanyDraft(company)
   );
-  const [savedCompany, setSavedCompany] = useState<CompanyDraft>(
+  const [savedCompany, setSavedCompany] = useState<CompanyDraft>(() =>
     createCompanyDraft(company)
   );
   const [isSavingCompany, setIsSavingCompany] = useState(false);

@@ -29,12 +29,17 @@ interface UsageLink {
   label: string;
   url: string;
 }
+
+interface UsageLinkDraft extends UsageLink {
+  id: string;
+}
+
 interface ProfileState {
   description: string;
   githubUrl: string;
   linkedinUrl: string;
   twitterUrl: string;
-  usageLinks: UsageLink[];
+  usageLinks: UsageLinkDraft[];
   websiteUrl: string;
 }
 interface UserTechStackEditorProps {
@@ -57,6 +62,10 @@ interface UserTechStackEditorProps {
   username: string;
 }
 
+let usageLinkIdCounter = 0;
+
+const createUsageLinkId = () => `usage-link-${usageLinkIdCounter++}`;
+
 const createProfileState = (
   profile: UserTechStackEditorProps["profile"]
 ): ProfileState => ({
@@ -65,9 +74,13 @@ const createProfileState = (
   twitterUrl: profile.twitterUrl ?? "",
   linkedinUrl: profile.linkedinUrl ?? "",
   websiteUrl: profile.websiteUrl ?? "",
-  usageLinks: profile.usageLinks.map((x) => ({ label: x.label, url: x.url })),
+  usageLinks: profile.usageLinks.map((x) => ({
+    id: createUsageLinkId(),
+    label: x.label,
+    url: x.url,
+  })),
 });
-const normalizeUsageLinks = (links: UsageLink[]) =>
+const normalizeUsageLinks = (links: UsageLinkDraft[]) =>
   links
     .map((l) => ({ label: l.label.trim(), url: l.url.trim() }))
     .filter((l) => l.label.length > 0 && l.url.length > 0);
@@ -95,10 +108,10 @@ export function UserTechStackEditor({
     api.mutations.deleteUserTechnologyDeprecationUpdate
   );
   const createTechnology = useMutation(api.mutations.createTechnology);
-  const [profileDraft, setProfileDraft] = useState<ProfileState>(
+  const [profileDraft, setProfileDraft] = useState<ProfileState>(() =>
     createProfileState(profile)
   );
-  const [savedProfile, setSavedProfile] = useState<ProfileState>(
+  const [savedProfile, setSavedProfile] = useState<ProfileState>(() =>
     createProfileState(profile)
   );
   const [isSavingProfile, setIsSavingProfile] = useState(false);
@@ -277,7 +290,10 @@ export function UserTechStackEditor({
                     onClick={() =>
                       setProfileDraft((p) => ({
                         ...p,
-                        usageLinks: [...p.usageLinks, { label: "", url: "" }],
+                        usageLinks: [
+                          ...p.usageLinks,
+                          { id: createUsageLinkId(), label: "", url: "" },
+                        ],
                       }))
                     }
                     size="sm"
@@ -292,7 +308,7 @@ export function UserTechStackEditor({
                   {profileDraft.usageLinks.map((link, index) => (
                     <div
                       className="grid gap-2 sm:grid-cols-[1fr_1fr_auto]"
-                      key={`${link.label}-${link.url}-${index}`}
+                      key={link.id}
                     >
                       <Input
                         onChange={(e) =>
