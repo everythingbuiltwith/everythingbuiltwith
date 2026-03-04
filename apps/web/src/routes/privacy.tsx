@@ -56,9 +56,9 @@ function PrivacyPage() {
             <ul className="list-disc space-y-2 pl-5">
               <li>
                 <strong>Consent management (c15t)</strong>: storing your consent
-                preferences in a necessary cookie (offline mode), so your choices
-                can be remembered. <strong>Legal basis</strong>: § 25(2) no. 2
-                TTDSG (strictly necessary) and Art. 6(1)(f) GDPR.
+                preferences in a necessary cookie (offline mode), so your
+                choices can be remembered. <strong>Legal basis</strong>: § 25(2)
+                no. 2 TTDSG (strictly necessary) and Art. 6(1)(f) GDPR.
               </li>
               <li>
                 <strong>Website delivery & security (Vercel hosting)</strong>:
