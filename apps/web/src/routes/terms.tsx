@@ -143,8 +143,8 @@ function TermsPage() {
               companies do not pay to be included on this website.
             </p>
             <p>
-              In some cases, we may receive free credits or other support from
-              a listed company. Such support is not provided in exchange for
+              In some cases, we may receive free credits or other support from a
+              listed company. Such support is not provided in exchange for
               listing, placement, ranking, or endorsement unless explicitly
               stated otherwise.
             </p>

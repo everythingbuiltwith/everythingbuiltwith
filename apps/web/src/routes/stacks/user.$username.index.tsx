@@ -96,7 +96,7 @@ export const Route = createFileRoute("/stacks/user/$username/")({
   head: ({ loaderData }) => {
     const siteUrl = trimTrailingSlash(env.VITE_PUBLIC_SITE_URL);
     const pageTitle = loaderData
-      ? `${loaderData.user.name} Tech Stack${staticTitle}`
+      ? `Personal Tech Stack of ${loaderData.user.name} (@${loaderData.user.username})${staticTitle}`
       : `User Tech Stack${staticTitle}`;
     const description = loaderData
       ? truncate(

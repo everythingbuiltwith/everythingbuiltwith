@@ -1,4 +1,8 @@
 /* biome-ignore-all lint/style/useFilenamingConvention: TanStack route filenames require $param and dot suffixes. */
+
+import { readFile } from "node:fs/promises";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { api } from "@everythingbuiltwith/backend/convex/_generated/api";
 import { createFileRoute } from "@tanstack/react-router";
 import { ImageResponse } from "@vercel/og";
@@ -13,6 +17,58 @@ import {
   truncate,
 } from "@/lib/og";
 
+async function loadLocalFont(): Promise<
+  { regular: ArrayBuffer; bold: ArrayBuffer } | undefined
+> {
+  const dir = dirname(fileURLToPath(import.meta.url));
+  const bases = [
+    join(dir, "..", "..", "..", "..", "public", "fonts"),
+    join(process.cwd(), "public", "fonts"),
+    join(process.cwd(), "apps", "web", "public", "fonts"),
+  ];
+  const bun =
+    "Bun" in globalThis
+      ? (
+          globalThis as unknown as {
+            Bun: {
+              file: (p: string) => {
+                exists: () => Promise<boolean>;
+                arrayBuffer: () => Promise<ArrayBuffer>;
+              };
+            };
+          }
+        ).Bun
+      : null;
+
+  const load = async (path: string): Promise<ArrayBuffer | undefined> => {
+    try {
+      if (bun) {
+        const file = bun.file(path);
+        if (await file.exists()) {
+          return await file.arrayBuffer();
+        }
+      } else {
+        const buf = await readFile(path);
+        const copy = new Uint8Array(buf.length);
+        copy.set(buf);
+        return copy.buffer;
+      }
+    } catch {
+      /* ignore */
+    }
+    return undefined;
+  };
+
+  for (const base of bases) {
+    const regular = await load(join(base, "Inter-Regular.ttf"));
+    const bold = await load(join(base, "Inter-Bold.ttf"));
+    if (regular !== undefined && bold !== undefined) {
+      return { regular, bold };
+    }
+  }
+  return undefined;
+}
+
 const backgroundStyle = {
   width: "100%",
   height: "100%",
@@ -22,48 +78,10 @@ const backgroundStyle = {
   padding: "48px",
   backgroundColor: "#09090b",
   backgroundImage:
-    "linear-gradient(to top, rgba(39,39,42,0.35) 0%, rgba(39,39,42,0.20) 50%, transparent 100%)",
+    "linear-gradient(to top, rgba(39,39,42,0.50) 0%, rgba(39,39,42,0.20) 50%, transparent 100%)",
   color: "#f5f5f7",
-  fontFamily: "Inter, sans-serif",
+  fontFamily: "Inter, Arial, sans-serif",
 } as const;
-
-const GOOGLE_FONT_SRC_REGEX =
-  /src: url\((.+)\) format\('(opentype|truetype)'\)/;
-
-/** Load Inter font in TTF format from Google Fonts (faster parsing than WOFF for Satori). */
-async function loadGoogleFont(
-  font: string,
-  weight: number,
-  text: string
-): Promise<ArrayBuffer | undefined> {
-  const url = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(font)}:wght@${weight}&text=${encodeURIComponent(text)}`;
-  const css = await fetch(url).then((r) => (r.ok ? r.text() : ""));
-  const match = css.match(GOOGLE_FONT_SRC_REGEX);
-  if (match) {
-    const response = await fetch(match[1]);
-    if (response.ok) {
-      return response.arrayBuffer();
-    }
-  }
-  return undefined;
-}
-
-let interFontsPromise: Promise<{
-  bold?: ArrayBuffer;
-  regular?: ArrayBuffer;
-}> | null = null;
-
-function getInterFontData() {
-  if (interFontsPromise !== null) {
-    return interFontsPromise;
-  }
-  const sampleText = "Everything Built With 0123456789";
-  interFontsPromise = Promise.all([
-    loadGoogleFont("Inter", 400, sampleText),
-    loadGoogleFont("Inter", 700, sampleText),
-  ]).then(([regular, bold]) => ({ bold, regular }));
-  return interFontsPromise;
-}
 
 function renderFallbackCard(username: string, siteUrl: string) {
   const brandLogoUrl =
@@ -118,30 +136,29 @@ async function createOgPngResponse(
   }
 ): Promise<Response> {
   try {
-    const interFonts = await getInterFontData();
-    const fontDefinitions = [
-      interFonts.regular
-        ? {
-            data: interFonts.regular,
-            name: "Inter",
-            style: "normal" as const,
-            weight: 400 as const,
-          }
-        : null,
-      interFonts.bold
-        ? {
-            data: interFonts.bold,
-            name: "Inter",
-            style: "normal" as const,
-            weight: 700 as const,
-          }
-        : null,
-    ].filter((font): font is Exclude<typeof font, null> => font !== null);
+    const fonts = await loadLocalFont();
+    const fontDefinitions =
+      fonts !== undefined
+        ? [
+            {
+              data: fonts.regular,
+              name: "Inter",
+              style: "normal" as const,
+              weight: 400 as const,
+            },
+            {
+              data: fonts.bold,
+              name: "Inter",
+              style: "normal" as const,
+              weight: 700 as const,
+            },
+          ]
+        : undefined;
 
     const image = new ImageResponse(element, {
       width: init.width,
       height: init.height,
-      fonts: fontDefinitions.length > 0 ? fontDefinitions : undefined,
+      fonts: fontDefinitions,
     });
     const body = await image.arrayBuffer();
     return new Response(body, {
@@ -216,184 +233,204 @@ export const Route = createFileRoute("/api/og/user/$username")({
 
           return createOgPngResponse(
             <div style={{ ...backgroundStyle, justifyContent: "flex-start" }}>
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <img
-                alt="Everything Built With logo"
-                height={44}
-                src={brandLogoUrl}
-                style={{ height: 44, objectFit: "contain" }}
-                width={298}
-              />
-            </div>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <img
+                  alt="Everything Built With logo"
+                  height={44}
+                  src={brandLogoUrl}
+                  style={{ height: 44, objectFit: "contain" }}
+                  width={298}
+                />
+              </div>
 
-            <div
-              style={{
-                display: "flex",
-                flex: 1,
-                gap: 32,
-                alignItems: "center",
-              }}
-            >
               <div
                 style={{
                   display: "flex",
-                  flexDirection: "column",
                   flex: 1,
-                  gap: 20,
+                  gap: 32,
+                  alignItems: "center",
                 }}
               >
-                <div
-                  style={{
-                    width: 150,
-                    height: 150,
-                    borderRadius: 999,
-                    overflow: "hidden",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    background: "#18181b",
-                    color: "#f5f5f7",
-                    fontWeight: 800,
-                    fontSize: 56,
-                    flexShrink: 0,
-                  }}
-                >
-                  {avatarUrl ? (
-                    <img
-                      alt={userDetails.user.name}
-                      height={150}
-                      src={avatarUrl}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                      }}
-                      width={150}
-                    />
-                  ) : (
-                    getInitials(userDetails.user.name)
-                  )}
-                </div>
-
                 <div
                   style={{
                     display: "flex",
                     flexDirection: "column",
-                    gap: 10,
+                    flex: 1,
+                    gap: 20,
                   }}
                 >
                   <div
                     style={{
-                      fontSize: 50,
-                      fontWeight: 700,
-                      lineHeight: 1.08,
+                      width: 150,
+                      height: 150,
+                      borderRadius: 999,
+                      overflow: "hidden",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      background: "#18181b",
+                      color: "#f5f5f7",
+                      fontWeight: 800,
+                      fontSize: 56,
+                      flexShrink: 0,
                     }}
                   >
-                    {truncate(userDetails.user.name, 30)}
+                    {avatarUrl ? (
+                      <img
+                        alt={userDetails.user.name}
+                        height={150}
+                        src={avatarUrl}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          borderRadius: 999,
+                        }}
+                        width={150}
+                      />
+                    ) : (
+                      getInitials(userDetails.user.name)
+                    )}
                   </div>
+
                   <div
                     style={{
-                      fontSize: 26,
-                      color: "#c8c8d0",
-                      lineHeight: 1.35,
-                      maxWidth: 580,
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 10,
                     }}
                   >
-                    {normalizedDescription}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: 22,
-                      color: "#a1a1b4",
-                      marginTop: 4,
-                    }}
-                  >
-                    {`@${userDetails.user.username}`}
+                    <div
+                      style={{
+                        fontSize: 60,
+                        fontWeight: 700,
+                        lineHeight: 1.08,
+                      }}
+                    >
+                      {truncate(userDetails.user.name, 30)}
+                    </div>
+                    <div
+                      style={{
+                        fontSize: 26,
+                        color: "#c8c8d0",
+                        lineHeight: 1.35,
+                        maxWidth: 580,
+                      }}
+                    >
+                      {normalizedDescription}
+                    </div>
+                    <div
+                      style={{
+                        fontSize: 26,
+                        color: "#a1a1b4",
+                        marginTop: 4,
+                      }}
+                    >
+                      {`@${userDetails.user.username}`}
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        alignSelf: "flex-start",
+                        marginTop: 14,
+                        height: 44,
+                        paddingLeft: 20,
+                        paddingRight: 20,
+                        borderRadius: 10,
+                        background: "#e8453a",
+                        color: "#ffffff",
+                        fontSize: 18,
+                        fontWeight: 500,
+                      }}
+                    >
+                      Explore stack now
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div
-                style={{
-                  display: "flex",
-                  padding: 16,
-                  background: "#18181b",
-                  border: "1px solid #27272a",
-                  borderRadius: 16,
-                  flexShrink: 0,
-                }}
-              >
                 <div
                   style={{
                     display: "flex",
-                    flexWrap: "wrap",
-                    gap: 14,
-                    width: 374,
+                    padding: 16,
+                    background: "#18181b",
+                    border: "1px solid #27272a",
+                    borderRadius: 16,
+                    flexShrink: 0,
                   }}
                 >
-                  {technologyChips.length > 0
-                    ? technologyChips.map((technology) => {
-                        const iconUrl = toAbsoluteUrl(
-                          `/icons/${technology.icon}.svg`,
-                          siteUrl
-                        );
-                        return (
+                  <div
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      gap: 14,
+                      width: 374,
+                    }}
+                  >
+                    {technologyChips.length > 0
+                      ? technologyChips.map((technology) => {
+                          const iconUrl = toAbsoluteUrl(
+                            `/icons/${technology.icon}.svg`,
+                            siteUrl
+                          );
+                          return (
+                            <div
+                              key={`${technology.name}-${technology.icon}`}
+                              style={{
+                                width: 180,
+                                height: 140,
+                                borderRadius: 12,
+                                background: "rgba(255,255,255,0.04)",
+                                display: "flex",
+                                flexDirection: "column",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                gap: 10,
+                                color: "#f3f4f6",
+                              }}
+                            >
+                              {iconUrl ? (
+                                <img
+                                  alt={`${technology.name} logo`}
+                                  height={48}
+                                  src={iconUrl}
+                                  style={{
+                                    width: 48,
+                                    height: 48,
+                                    objectFit: "contain",
+                                  }}
+                                  width={48}
+                                />
+                              ) : null}
+                              <span style={{ fontSize: 20 }}>
+                                {technology.name}
+                              </span>
+                            </div>
+                          );
+                        })
+                      : [
                           <div
-                            key={`${technology.name}-${technology.icon}`}
+                            key="no-teaser-icons"
                             style={{
-                              width: 180,
+                              width: 374,
                               height: 140,
                               borderRadius: 12,
                               background: "rgba(255,255,255,0.04)",
                               display: "flex",
-                              flexDirection: "column",
-                              justifyContent: "center",
                               alignItems: "center",
-                              gap: 10,
+                              justifyContent: "center",
+                              fontSize: 20,
                               color: "#f3f4f6",
                             }}
                           >
-                            {iconUrl ? (
-                              <img
-                                alt={`${technology.name} logo`}
-                                height={48}
-                                src={iconUrl}
-                                style={{
-                                  width: 48,
-                                  height: 48,
-                                  objectFit: "contain",
-                                }}
-                                width={48}
-                              />
-                            ) : null}
-                            <span style={{ fontSize: 20 }}>
-                              {technology.name}
-                            </span>
-                          </div>
-                        );
-                      })
-                    : [
-                        <div
-                          key="no-teaser-icons"
-                          style={{
-                            width: 374,
-                            height: 140,
-                            borderRadius: 12,
-                            background: "rgba(255,255,255,0.04)",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            fontSize: 20,
-                            color: "#f3f4f6",
-                          }}
-                        >
-                          Stack details available on profile
-                        </div>,
-                      ]}
+                            Stack details available on profile
+                          </div>,
+                        ]}
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>,
+            </div>,
             {
               width: OG_IMAGE_WIDTH,
               height: OG_IMAGE_HEIGHT,
