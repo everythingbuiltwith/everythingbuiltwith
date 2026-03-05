@@ -206,7 +206,6 @@ function RootDocument() {
           colorBorder: "var(--muted-foreground)",
           colorModalBackdrop: "color-mix(in oklch, var(--background) 75%, black)",
           borderRadius: "var(--radius)",
-          colorAccent: "var(--accent)",
         },
       }}
     >
