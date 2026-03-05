@@ -185,7 +185,30 @@ function RootDocument() {
   }, []);
 
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      appearance={{
+        variables: {
+          colorPrimary: "var(--primary)",
+          colorDanger: "var(--destructive)",
+          colorSuccess: "var(--primary)",
+          colorWarning: "var(--accent)",
+          colorNeutral: "var(--muted)",
+          colorForeground: "var(--foreground)",
+          colorPrimaryForeground: "var(--primary-foreground)",
+          colorMutedForeground: "var(--muted-foreground)",
+          colorMuted: "var(--muted)",
+          colorBackground: "var(--card)",
+          colorInputForeground: "var(--foreground)",
+          colorInput: "var(--input)",
+          colorShimmer: "var(--muted-foreground)",
+          colorRing: "var(--ring)",
+          colorShadow: "var(--shadow-color)",
+          colorBorder: "var(--muted-foreground)",
+          colorModalBackdrop: "color-mix(in oklch, var(--background) 75%, black)",
+          borderRadius: "var(--radius)",
+        },
+      }}
+    >
       <ConvexProviderWithClerk
         client={context.convexQueryClient.convexClient}
         useAuth={useAuth}

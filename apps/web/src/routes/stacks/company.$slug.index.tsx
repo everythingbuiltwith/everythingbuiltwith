@@ -1,10 +1,5 @@
 /* biome-ignore-all lint/style/useFilenamingConvention: TanStack route filenames require $param and dot suffixes. */
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  useUser,
-} from "@clerk/tanstack-react-start";
+import { Show, SignInButton, useUser } from "@clerk/tanstack-react-start";
 import { convexQuery } from "@convex-dev/react-query";
 import { api } from "@everythingbuiltwith/backend/convex/_generated/api";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
@@ -125,10 +120,9 @@ function RouteComponent() {
           </div>
         </div>
       </div>
-
       {stackData === null ? (
         <>
-          <SignedOut>
+          <Show when="signed-out">
             <Empty className="w-full">
               <EmptyHeader>
                 <EmptyMedia>
@@ -146,8 +140,8 @@ function RouteComponent() {
                 </div>
               </EmptyHeader>
             </Empty>
-          </SignedOut>
-          <SignedIn>
+          </Show>
+          <Show when="signed-in">
             <Empty className="w-full">
               <EmptyHeader>
                 <EmptyTitle>Company stack unavailable</EmptyTitle>
@@ -156,7 +150,7 @@ function RouteComponent() {
                 </EmptyDescription>
               </EmptyHeader>
             </Empty>
-          </SignedIn>
+          </Show>
         </>
       ) : (
         <div>

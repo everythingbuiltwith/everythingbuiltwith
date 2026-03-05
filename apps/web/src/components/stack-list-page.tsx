@@ -1,4 +1,4 @@
-import { SignedOut, SignInButton, useUser } from "@clerk/tanstack-react-start";
+import { Show, SignInButton, useUser } from "@clerk/tanstack-react-start";
 import { convexQuery } from "@convex-dev/react-query";
 import { api } from "@everythingbuiltwith/backend/convex/_generated/api";
 import type { Id } from "@everythingbuiltwith/backend/convex/_generated/dataModel";
@@ -358,11 +358,9 @@ function ResultsSection({
           })}
         </div>
       ) : null}
-
       <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
         {renderedCards}
       </section>
-
       {!isPending && activeCardsCount === 0 ? (
         <Empty>
           <EmptyHeader>
@@ -374,7 +372,6 @@ function ResultsSection({
           </EmptyHeader>
         </Empty>
       ) : null}
-
       {totalPages > 1 ? (
         <Pagination>
           <PaginationContent>
@@ -425,9 +422,8 @@ function ResultsSection({
           </PaginationContent>
         </Pagination>
       ) : null}
-
       {isCompanyMode && !isSignedIn ? (
-        <SignedOut>
+        <Show when="signed-out">
           <div className="rounded-3xl border border-primary/30 bg-primary px-8 py-12 text-primary-foreground md:px-12">
             <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
               <div>
@@ -454,7 +450,7 @@ function ResultsSection({
               </div>
             </div>
           </div>
-        </SignedOut>
+        </Show>
       ) : null}
     </section>
   );

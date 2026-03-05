@@ -1,4 +1,4 @@
-import { SignedIn, SignedOut, SignInButton } from "@clerk/tanstack-react-start";
+import { Show, SignInButton } from "@clerk/tanstack-react-start";
 import { convexQuery } from "@convex-dev/react-query";
 import { api } from "@everythingbuiltwith/backend/convex/_generated/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -48,20 +48,20 @@ function HeroSection() {
           </p>
           <div className="hero-reveal hero-reveal-3 mt-10">
             <div className="flex gap-4">
-              <SignedOut>
+              <Show when="signed-out">
                 <SignInButton>
                   <Button size="lg" variant="default">
                     Login And Explore Stacks Now
                   </Button>
                 </SignInButton>
-              </SignedOut>
-              <SignedIn>
+              </Show>
+              <Show when="signed-in">
                 <Link to="/community-stacks">
                   <Button size="lg" variant="default">
                     Submit Your Own Stack Now
                   </Button>
                 </Link>
-              </SignedIn>
+              </Show>
             </div>
           </div>
         </div>
@@ -134,7 +134,6 @@ function HeroSection() {
           </svg>
         </div>
       </div>
-
       <style>{`
         @keyframes hero-icon-drift {
           0%, 100% { transform: translate(-50%, -50%) translate(0, 0); }
@@ -152,9 +151,9 @@ function HomeComponent() {
       <HeroSection />
       <FeaturesSection />
       <FeaturedStacksSection />
-      <SignedOut>
+      <Show when="signed-out">
         <GetStartedSection />
-      </SignedOut>
+      </Show>
     </>
   );
 }
