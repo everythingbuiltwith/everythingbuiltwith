@@ -1,12 +1,4 @@
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  SignOutButton,
-  UserAvatar,
-  useClerk,
-  useUser,
-} from "@clerk/tanstack-react-start";
+import { Show, SignInButton, SignOutButton, UserAvatar, useClerk, useUser } from "@clerk/tanstack-react-start";
 import { api } from "@everythingbuiltwith/backend/convex/_generated/api";
 import { Link } from "@tanstack/react-router";
 import { useMutation } from "convex/react";
@@ -183,12 +175,12 @@ export default function Header() {
             />
           </a>
           <div aria-hidden="true" className="h-5 w-px bg-border" />
-          <SignedOut>
+          <Show when="signed-out">
             <SignInButton>
               <Button variant="secondary">Sign in</Button>
             </SignInButton>
-          </SignedOut>
-          <SignedIn>
+          </Show>
+          <Show when="signed-in">
             <DropdownMenu>
               <DropdownMenuTrigger
                 aria-label="Open account menu"
@@ -226,7 +218,7 @@ export default function Header() {
                 </SignOutButton>
               </DropdownMenuContent>
             </DropdownMenu>
-          </SignedIn>
+          </Show>
         </div>
       </div>
     </header>
