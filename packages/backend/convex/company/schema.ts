@@ -7,6 +7,10 @@ export const company = defineTable({
   logo: v.string(),
   description: v.string(),
   industryId: v.id("industry"),
+  verificationStatus: v.union(
+    v.literal("public_data_only"),
+    v.literal("verified")
+  ),
   companyInfo: v.object({
     size: v.string(),
     website: v.string(),

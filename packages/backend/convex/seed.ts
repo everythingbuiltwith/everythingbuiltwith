@@ -47,6 +47,8 @@ const technologies = [
   { name: "prisma", iconPath: "company/prisma" },
 ] as const;
 
+type VerificationStatus = "public_data_only" | "verified";
+
 const companies = [
   {
     name: "Vercel",
@@ -61,6 +63,7 @@ const companies = [
       hq: "San Francisco, CA",
     },
     featured: true,
+    verificationStatus: "verified" as VerificationStatus,
   },
   {
     name: "Linear",
@@ -75,6 +78,7 @@ const companies = [
       hq: "San Francisco, CA",
     },
     featured: true,
+    verificationStatus: "verified" as VerificationStatus,
   },
   {
     name: "Stripe",
@@ -89,6 +93,7 @@ const companies = [
       hq: "San Francisco, CA",
     },
     featured: false,
+    verificationStatus: "public_data_only" as VerificationStatus,
   },
   {
     name: "Supabase",
@@ -103,6 +108,7 @@ const companies = [
       hq: "San Francisco, CA",
     },
     featured: true,
+    verificationStatus: "verified" as VerificationStatus,
   },
   {
     name: "Convex",
@@ -116,6 +122,7 @@ const companies = [
       hq: "San Francisco, CA",
     },
     featured: true,
+    verificationStatus: "verified" as VerificationStatus,
   },
 ] as const;
 
@@ -679,6 +686,7 @@ export const run = mutation({
         logo: company.logo,
         description: company.description,
         industryId,
+        verificationStatus: company.verificationStatus ?? "public_data_only",
         companyInfo: company.companyInfo,
         featured: company.featured,
       };
@@ -709,13 +717,15 @@ export const run = mutation({
         .withIndex("by_company_id", (q) => q.eq("companyId", companyId))
         .unique();
 
+      const stackOwnerPayload = {
+        type: "company" as const,
+        companyId,
+      };
+
       if (existingOwner === null) {
-        ownerIds[slug] = await ctx.db.insert("stackOwner", {
-          type: "company",
-          companyId,
-        });
+        ownerIds[slug] = await ctx.db.insert("stackOwner", stackOwnerPayload);
       } else {
-        await ctx.db.patch(existingOwner._id, { type: "company", companyId });
+        await ctx.db.patch(existingOwner._id, stackOwnerPayload);
         ownerIds[slug] = existingOwner._id;
       }
     }

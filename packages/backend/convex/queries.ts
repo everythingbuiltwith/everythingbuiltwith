@@ -31,6 +31,7 @@ export const companyDetailsSchema = z.object({
   slug: z.string(),
   logo: z.string(),
   description: z.string(),
+  verificationStatus: z.enum(["public_data_only", "verified"]),
   companyInfo: z.object({
     size: z.string(),
     website: z.string(),
@@ -424,6 +425,10 @@ const companyDetailsValidator = v.object({
   slug: v.string(),
   logo: v.string(),
   description: v.string(),
+  verificationStatus: v.union(
+    v.literal("public_data_only"),
+    v.literal("verified")
+  ),
   companyInfo: v.object({
     size: v.string(),
     website: v.string(),
@@ -1974,6 +1979,7 @@ export const getCompanyDetailsBySlug = query({
       slug: company.slug,
       logo: company.logo,
       description: company.description,
+      verificationStatus: company.verificationStatus,
       companyInfo: company.companyInfo,
       industry: {
         _id: industry._id,
