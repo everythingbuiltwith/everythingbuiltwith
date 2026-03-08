@@ -91,7 +91,25 @@ function RouteComponent() {
           width={240}
         />
         <div>
-          <h1 className="mb-4 font-bold text-3xl">{company.name}</h1>
+          <div className="mb-4 flex flex-wrap items-center gap-3">
+            <h1 className="font-bold text-3xl">{company.name}</h1>
+            {company.verificationStatus === "verified" && (
+              <Badge
+                className="bg-emerald-500/15 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400"
+                variant="secondary"
+              >
+                Verified
+              </Badge>
+            )}
+            {company.verificationStatus === "public_data_only" && (
+              <Badge
+                className="bg-amber-500/15 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400"
+                variant="secondary"
+              >
+                Public data only
+              </Badge>
+            )}
+          </div>
           <p className="text-muted-foreground">{company.description}</p>
           <div className="mt-4 flex flex-wrap items-center gap-8">
             <div>
