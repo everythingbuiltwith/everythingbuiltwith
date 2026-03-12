@@ -12,11 +12,11 @@
   "dependencies": {
     "convex": "^1.32.0",
     "dotenv": "^17.3.1",
-    "svix": "^1.86.0",
+    "svix": "^1.88.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@types/node": "^25.3.5",
+    "@types/node": "^25.5.0",
     "typescript": "^5.9.3",
     "@everythingbuiltwith/config": "workspace:*"
   }
