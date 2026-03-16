@@ -10,7 +10,7 @@
     "seed": "convex run seed:run \"{}\""
   },
   "dependencies": {
-    "convex": "^1.32.0",
+    "convex": "^1.33.1",
     "dotenv": "^17.3.1",
     "svix": "^1.88.0",
     "zod": "^4.3.6"
