@@ -59,17 +59,20 @@ function TermsPage() {
           </h2>
           <div className="space-y-3 text-sm leading-relaxed">
             <p>
-              Users can submit content, in particular information about tech
-              stacks, technologies, reasons, descriptions, links and metadata
-              (“User Content”).
+              Users or third parties may submit content, including via the
+              platform, email, or other communication channels, in particular
+              information about tech stacks, technologies, reasons,
+              descriptions, links and metadata (“User Content”). Content
+              provided outside of the platform shall also be considered User
+              Content under these Terms.
             </p>
             <p>
               <strong>Important</strong>: By submitting User Content, you assign
               to us, to the maximum extent permitted by law, all exclusive,
               worldwide, transferable and sublicensable rights of use in the
               User Content, for an unlimited term and scope, including the right
-              to reproduce, distribute, make publicly available, edit/adapt, and
-              commercially exploit it.
+              to reproduce, distribute, make publicly available, edit/adapt,
+              analyze, aggregate, and commercially exploit it.
             </p>
             <p>
               Where a full assignment is not legally possible, you grant us an{" "}
@@ -81,11 +84,28 @@ function TermsPage() {
               use User Content for our own business purposes and to sell it.
             </p>
             <p>
+              We may use User Content, as well as other data we collect or
+              obtain from publicly available sources, to create aggregated,
+              anonymized, or statistical insights, benchmarks, and reports.
+              These may be used for commercial purposes, including paid
+              features or services.
+            </p>
+            <p>
+              We may retain and continue to use User Content in aggregated or
+              anonymized form even after deletion of a user account or upon
+              request, provided such data no longer identifies a specific
+              individual.
+            </p>
+            <p>
+              Unless explicitly agreed otherwise in writing, any information
+              submitted to us is considered non-confidential.
+            </p>
+            <p>
               You represent that you have the necessary rights to grant the
               rights above and that your User Content does not infringe
-              third‑party rights (e.g. copyrights, trademarks, database rights,
-              trade secrets). You will indemnify us against third‑party claims
-              arising from unlawful User Content to the extent you are
+              third-party rights (e.g. copyrights, trademarks, database
+              rights, trade secrets). You will indemnify us against third-party
+              claims arising from unlawful User Content to the extent you are
               responsible for the infringement.
             </p>
           </div>
@@ -199,7 +219,19 @@ function TermsPage() {
         </section>
 
         <section className="space-y-3">
-          <h2 className="font-semibold text-xl tracking-tight">10. Contact</h2>
+          <h2 className="font-semibold text-xl tracking-tight">
+            10. Database rights
+          </h2>
+          <p className="text-sm leading-relaxed">
+            We own all rights, including database rights, in the compilation,
+            structure, and organization of the Service and its data. Individual
+            data points may originate from users or public sources, but the
+            overall database is our property.
+          </p>
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="font-semibold text-xl tracking-tight">11. Contact</h2>
           <p className="text-sm leading-relaxed">
             If you have questions about these Terms, contact us at{" "}
             <strong>contact@everythingbuiltwith.com</strong>.

@@ -2,6 +2,7 @@ import { v } from "convex/values";
 import { z } from "zod";
 import type { Doc, Id } from "./_generated/dataModel";
 import { type QueryCtx, query } from "./_generated/server";
+import { canEditCompanyTechStack } from "./companyTechStackAccess";
 
 export const companySlugInputSchema = z.object({
   slug: z.string().trim().min(1),
@@ -716,67 +717,8 @@ type UsernameRedirectDoc = Doc<"usernameRedirect">;
 
 const SHORT_DESCRIPTION_MAX_CHARS = 250;
 const MAX_USERNAME_REDIRECT_HOPS = 10;
-const COMPANY_TECH_STACK_ADMIN_METADATA_KEY = "company_tech_stack_admin";
 const DEFAULT_STACK_LIST_LIMIT = 12;
 const MAX_STACK_LIST_LIMIT = 48;
-
-function getBooleanMetadataField(
-  source: unknown,
-  key: string
-): boolean | undefined {
-  if (source === null || typeof source !== "object") {
-    return undefined;
-  }
-
-  const value = (source as Record<string, unknown>)[key];
-  if (value === true) {
-    return true;
-  }
-  if (value === false) {
-    return false;
-  }
-  if (typeof value === "string") {
-    const normalized = value.trim().toLowerCase();
-    if (normalized === "true") {
-      return true;
-    }
-    if (normalized === "false") {
-      return false;
-    }
-  }
-
-  return undefined;
-}
-
-function hasCompanyTechStackAdminAccess(
-  identity: Record<string, unknown>
-): boolean {
-  const directValue = getBooleanMetadataField(
-    identity,
-    COMPANY_TECH_STACK_ADMIN_METADATA_KEY
-  );
-  if (directValue !== undefined) {
-    return directValue;
-  }
-
-  const publicMetadataSnake = getBooleanMetadataField(
-    identity.public_metadata,
-    COMPANY_TECH_STACK_ADMIN_METADATA_KEY
-  );
-  if (publicMetadataSnake !== undefined) {
-    return publicMetadataSnake;
-  }
-
-  const publicMetadataCamel = getBooleanMetadataField(
-    identity.publicMetadata,
-    COMPANY_TECH_STACK_ADMIN_METADATA_KEY
-  );
-  if (publicMetadataCamel !== undefined) {
-    return publicMetadataCamel;
-  }
-
-  return false;
-}
 
 function toShortDescription(value: string): string {
   return value.slice(0, SHORT_DESCRIPTION_MAX_CHARS);
@@ -2266,7 +2208,10 @@ export const canCurrentUserEditCompanyTechStack = query({
       return false;
     }
 
-    return hasCompanyTechStackAdminAccess(identity as Record<string, unknown>);
+    return canEditCompanyTechStack(
+      identity as Record<string, unknown>,
+      args.slug
+    );
   },
 });
 
@@ -2280,7 +2225,7 @@ export const getCompanyTechStackEditorData = query({
     if (identity === null) {
       throw new Error("Not authenticated");
     }
-    if (!hasCompanyTechStackAdminAccess(identity as Record<string, unknown>)) {
+    if (!canEditCompanyTechStack(identity as Record<string, unknown>, args.slug)) {
       throw new Error("Not authorized to edit company tech stacks");
     }
 
