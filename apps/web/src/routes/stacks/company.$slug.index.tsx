@@ -5,6 +5,7 @@ import { api } from "@everythingbuiltwith/backend/convex/_generated/api";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { CircleOff, Lock } from "lucide-react";
 import { StackCategoryDetailCard } from "@/components/stack-category-detail-card";
+import { canEditCompanyTechStack } from "@/lib/company-tech-stack-access";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -75,10 +76,8 @@ function CompanyStackNotFound() {
 function RouteComponent() {
   const pageData = Route.useLoaderData();
   const { user } = useUser();
-  const canEditCompany =
-    user?.publicMetadata?.company_tech_stack_admin === true;
-
   const { company, stackData } = pageData;
+  const canEditCompany = canEditCompanyTechStack(user, company.slug);
 
   return (
     <div className="container mx-auto flex flex-col gap-8 px-4 py-12">

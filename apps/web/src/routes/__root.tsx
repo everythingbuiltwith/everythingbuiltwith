@@ -99,6 +99,21 @@ const fetchClerkAuth = createServerFn({ method: "GET" }).handler(async () => {
   return { userId: clerkAuth.userId, token };
 });
 
+function useConvexClerkAuth() {
+  const clerkAuth = useAuth();
+
+  return {
+    ...clerkAuth,
+    getToken: async (
+      options?: Parameters<typeof clerkAuth.getToken>[0]
+    ): Promise<string | null> =>
+      await clerkAuth.getToken({
+        ...options,
+        template: "convex",
+      }),
+  };
+}
+
 interface RouterAppContext {
   convexQueryClient: ConvexQueryClient;
   queryClient: QueryClient;
@@ -211,7 +226,7 @@ function RootDocument() {
     >
       <ConvexProviderWithClerk
         client={context.convexQueryClient.convexClient}
-        useAuth={useAuth}
+        useAuth={useConvexClerkAuth}
       >
         <ConsentManagerProvider
           options={{
