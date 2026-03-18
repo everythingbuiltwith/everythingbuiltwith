@@ -18,7 +18,7 @@ function TermsPage() {
       <header className="space-y-3">
         <h1 className="font-semibold text-3xl tracking-tight">Terms of Use</h1>
         <p className="text-muted-foreground text-sm">
-          Effective date: <strong>February 18, 2026</strong>
+          Effective date: <strong>March 18, 2026</strong>
         </p>
       </header>
 
