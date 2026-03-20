@@ -80,18 +80,18 @@ function RouteComponent() {
   const canEditCompany = canEditCompanyTechStack(user, company.slug);
 
   return (
-    <div className="container mx-auto flex flex-col gap-8 px-4 py-12">
-      <div className="flex items-center gap-8">
+    <div className="container mx-auto flex flex-col gap-8 px-4 py-10 sm:py-12">
+      <div className="flex flex-col gap-6 md:flex-row md:items-start md:gap-8">
         <img
           alt={company.name}
-          className="w-60 rounded-xl p-2"
+          className="w-40 max-w-full rounded-xl p-2 sm:w-52 md:w-60"
           height={240}
           src={`/icons/company/${company.logo}.svg`}
           width={240}
         />
-        <div>
+        <div className="min-w-0 flex-1">
           <div className="mb-4 flex flex-wrap items-center gap-3">
-            <h1 className="font-bold text-3xl">{company.name}</h1>
+            <h1 className="font-bold text-2xl sm:text-3xl">{company.name}</h1>
             {company.verificationStatus === "verified" && (
               <Badge
                 className="bg-emerald-500/15 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400"
@@ -109,8 +109,10 @@ function RouteComponent() {
               </Badge>
             )}
           </div>
-          <p className="text-muted-foreground">{company.description}</p>
-          <div className="mt-4 flex flex-wrap items-center gap-8">
+          <p className="max-w-3xl text-muted-foreground text-sm leading-relaxed sm:text-base">
+            {company.description}
+          </p>
+          <div className="mt-4 grid grid-cols-1 gap-4 text-sm sm:grid-cols-2 xl:grid-cols-4">
             <div>
               <div className="text-muted-foreground text-xs">Company Size</div>
               <div className="font-medium">{company.companyInfo.size}</div>
@@ -118,7 +120,7 @@ function RouteComponent() {
             <div>
               <div className="text-muted-foreground text-xs">Website</div>
               <a
-                className="font-medium text-primary underline"
+                className="break-all font-medium text-primary underline underline-offset-4"
                 href={company.companyInfo.website}
                 rel="noopener noreferrer"
                 target="_blank"
@@ -171,10 +173,10 @@ function RouteComponent() {
         </>
       ) : (
         <div>
-          <div className="mb-4 flex items-center justify-between gap-3">
+          <div className="mb-4 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
             <h2 className="font-bold text-2xl">Overview</h2>
             {canEditCompany ? (
-              <Button size="sm" variant="outline">
+              <Button className="w-full sm:w-auto" size="sm" variant="outline">
                 <Link
                   params={{ slug: company.slug }}
                   to="/stacks/company/$slug/edit"

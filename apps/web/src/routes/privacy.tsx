@@ -14,9 +14,9 @@ export const Route = createFileRoute("/privacy")({
 
 function PrivacyPage() {
   return (
-    <div className="container mx-auto px-6 py-14">
+    <div className="container mx-auto max-w-4xl break-words px-4 py-10 sm:px-6 sm:py-14">
       <header className="space-y-3">
-        <h1 className="font-semibold text-3xl tracking-tight">
+        <h1 className="font-semibold text-2xl tracking-tight sm:text-3xl">
           Privacy Policy
         </h1>
         <p className="text-muted-foreground text-sm">
@@ -25,7 +25,7 @@ function PrivacyPage() {
         </p>
       </header>
 
-      <div className="mt-10 space-y-10">
+      <div className="mt-8 space-y-8 sm:mt-10 sm:space-y-10">
         <section className="space-y-3">
           <h2 className="font-semibold text-xl tracking-tight">
             1. Controller

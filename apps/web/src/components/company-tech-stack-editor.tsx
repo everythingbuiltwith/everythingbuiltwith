@@ -272,6 +272,7 @@ export function CompanyTechStackEditor({
             </CardContent>
             <CardFooter className="justify-end">
               <Button
+                className="w-full sm:w-auto"
                 disabled={!isCompanyDirty || isSavingCompany}
                 onClick={saveCompanySection}
                 type="button"

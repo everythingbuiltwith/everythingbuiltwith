@@ -236,9 +236,9 @@ function RouteComponent() {
       normalizedSignedInUsername === normalizedRouteUsername);
 
   return (
-    <div className="container mx-auto flex flex-col gap-8 px-4 py-12">
-      <div className="flex items-center gap-8">
-        <Avatar className="size-40">
+    <div className="container mx-auto flex flex-col gap-8 px-4 py-10 sm:py-12">
+      <div className="flex flex-col gap-6 md:flex-row md:items-start md:gap-8">
+        <Avatar className="size-24 sm:size-32 md:size-40">
           <AvatarImage
             alt={pageData.user.name}
             height={160}
@@ -249,9 +249,11 @@ function RouteComponent() {
             {userInitials}
           </AvatarFallback>
         </Avatar>
-        <div>
-          <h1 className="mb-4 font-bold text-3xl">{pageData.user.name}</h1>
-          <p className="text-muted-foreground">
+        <div className="min-w-0 flex-1">
+          <h1 className="mb-4 font-bold text-2xl sm:text-3xl">
+            {pageData.user.name}
+          </h1>
+          <p className="max-w-3xl text-muted-foreground text-sm leading-relaxed sm:text-base">
             {pageData.user.description || "No description available yet."}
           </p>
           <div className="mt-4 flex flex-wrap items-center gap-3">
@@ -266,7 +268,7 @@ function RouteComponent() {
             {socialLinks.map((link) => {
               return link.href ? (
                 <a
-                  className="inline-flex items-center gap-1.5 font-medium text-primary text-sm underline"
+                  className="inline-flex items-center gap-1.5 break-all font-medium text-primary text-sm underline"
                   href={link.href}
                   key={link.label}
                   rel="noopener noreferrer"
@@ -290,10 +292,10 @@ function RouteComponent() {
       </div>
 
       <div>
-        <div className="mb-4 flex items-center justify-between gap-3">
+        <div className="mb-4 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="font-bold text-2xl">Overview</h2>
           {isViewingOwnProfile ? (
-            <Button size="sm" variant="outline">
+            <Button className="w-full sm:w-auto" size="sm" variant="outline">
               <Link
                 params={{ username: pageData.user.username }}
                 to="/stacks/user/$username/edit"
@@ -365,7 +367,7 @@ function RouteComponent() {
           <div className="flex flex-col gap-2">
             {pageData.user.usageLinks.map((link) => (
               <a
-                className="w-fit font-medium text-primary text-sm underline"
+                className="break-all font-medium text-primary text-sm underline"
                 href={link.url}
                 key={`${link.label}-${link.url}`}
                 rel="noopener noreferrer"

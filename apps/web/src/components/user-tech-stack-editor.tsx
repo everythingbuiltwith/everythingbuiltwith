@@ -291,9 +291,10 @@ export function UserTechStackEditor({
                 </div>
               </div>
               <div className="space-y-3">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <Label>Usage links</Label>
                   <Button
+                    className="w-full sm:w-auto"
                     onClick={() =>
                       setProfileDraft((p) => ({
                         ...p,
@@ -314,7 +315,7 @@ export function UserTechStackEditor({
                 <div className="space-y-3">
                   {profileDraft.usageLinks.map((link, index) => (
                     <div
-                      className="grid gap-2 sm:grid-cols-[1fr_1fr_auto]"
+                      className="grid items-start gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]"
                       key={link.id}
                     >
                       <Input
@@ -344,7 +345,7 @@ export function UserTechStackEditor({
                         value={link.url}
                       />
                       <Button
-                        className="text-destructive hover:text-destructive"
+                        className="justify-self-start text-destructive hover:text-destructive sm:justify-self-auto"
                         onClick={() =>
                           setProfileDraft((p) => ({
                             ...p,
@@ -366,6 +367,7 @@ export function UserTechStackEditor({
             </CardContent>
             <CardFooter className="justify-end">
               <Button
+                className="w-full sm:w-auto"
                 disabled={!isProfileDirty || isSavingProfile}
                 onClick={saveProfileSection}
                 type="button"
