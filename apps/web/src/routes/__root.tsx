@@ -24,6 +24,12 @@ import { useCallback, useEffect, useRef } from "react";
 import Footer from "../components/footer";
 import Header from "../components/header";
 import { Toaster } from "../components/ui/sonner";
+import {
+  getMainSiteOgImageUrl,
+  OG_IMAGE_HEIGHT,
+  OG_IMAGE_WIDTH,
+  trimTrailingSlash,
+} from "../lib/og";
 import appCss from "../index.css?url";
 
 export const staticTitle = " | Everything Built With";
@@ -120,44 +126,73 @@ interface RouterAppContext {
 }
 
 export const Route = createRootRouteWithContext<RouterAppContext>()({
-  head: () => ({
-    meta: [
-      {
-        charSet: "utf-8",
-      },
-      {
-        name: "viewport",
-        content: "width=device-width, initial-scale=1",
-      },
-    ],
-    links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
-      {
-        rel: "apple-touch-icon",
-        sizes: "180x180",
-        href: "/apple-touch-icon.png",
-      },
-      {
-        rel: "icon",
-        type: "image/png",
-        sizes: "32x32",
-        href: "/favicon-32x32.png",
-      },
-      {
-        rel: "icon",
-        type: "image/png",
-        sizes: "16x16",
-        href: "/favicon-16x16.png",
-      },
-      {
-        rel: "manifest",
-        href: "/site.webmanifest",
-      },
-    ],
-  }),
+  head: () => {
+    const siteUrl = trimTrailingSlash(env.VITE_PUBLIC_SITE_URL);
+    const defaultOgImageUrl = getMainSiteOgImageUrl(siteUrl);
+
+    return {
+      meta: [
+        {
+          charSet: "utf-8",
+        },
+        {
+          name: "viewport",
+          content: "width=device-width, initial-scale=1",
+        },
+        {
+          property: "og:site_name",
+          content: "Everything Built With",
+        },
+        {
+          property: "og:image",
+          content: defaultOgImageUrl,
+        },
+        {
+          property: "og:image:width",
+          content: String(OG_IMAGE_WIDTH),
+        },
+        {
+          property: "og:image:height",
+          content: String(OG_IMAGE_HEIGHT),
+        },
+        {
+          name: "twitter:card",
+          content: "summary_large_image",
+        },
+        {
+          name: "twitter:image",
+          content: defaultOgImageUrl,
+        },
+      ],
+      links: [
+        {
+          rel: "stylesheet",
+          href: appCss,
+        },
+        {
+          rel: "apple-touch-icon",
+          sizes: "180x180",
+          href: "/apple-touch-icon.png",
+        },
+        {
+          rel: "icon",
+          type: "image/png",
+          sizes: "32x32",
+          href: "/favicon-32x32.png",
+        },
+        {
+          rel: "icon",
+          type: "image/png",
+          sizes: "16x16",
+          href: "/favicon-16x16.png",
+        },
+        {
+          rel: "manifest",
+          href: "/site.webmanifest",
+        },
+      ],
+    };
+  },
 
   component: RootDocument,
   beforeLoad: async (ctx) => {

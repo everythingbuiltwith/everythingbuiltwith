@@ -18,6 +18,7 @@ import { Route as BlogRouteImport } from './routes/blog'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StacksUserUsernameRouteImport } from './routes/stacks/user.$username'
 import { Route as StacksCompanySlugRouteImport } from './routes/stacks/company.$slug'
+import { Route as ApiOgDefaultRouteImport } from './routes/api/og/default'
 import { Route as StacksUserUsernameIndexRouteImport } from './routes/stacks/user.$username.index'
 import { Route as StacksCompanySlugIndexRouteImport } from './routes/stacks/company.$slug.index'
 import { Route as StacksUserUsernameEditRouteImport } from './routes/stacks/user.$username.edit'
@@ -69,6 +70,11 @@ const StacksCompanySlugRoute = StacksCompanySlugRouteImport.update({
   path: '/stacks/company/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiOgDefaultRoute = ApiOgDefaultRouteImport.update({
+  id: '/api/og/default',
+  path: '/api/og/default',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StacksUserUsernameIndexRoute = StacksUserUsernameIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -103,6 +109,7 @@ export interface FileRoutesByFullPath {
   '/imprint': typeof ImprintRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/api/og/default': typeof ApiOgDefaultRoute
   '/stacks/company/$slug': typeof StacksCompanySlugRouteWithChildren
   '/stacks/user/$username': typeof StacksUserUsernameRouteWithChildren
   '/api/og/user/$username': typeof ApiOgUserUsernameRoute
@@ -119,6 +126,7 @@ export interface FileRoutesByTo {
   '/imprint': typeof ImprintRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/api/og/default': typeof ApiOgDefaultRoute
   '/api/og/user/$username': typeof ApiOgUserUsernameRoute
   '/stacks/company/$slug/edit': typeof StacksCompanySlugEditRoute
   '/stacks/user/$username/edit': typeof StacksUserUsernameEditRoute
@@ -134,6 +142,7 @@ export interface FileRoutesById {
   '/imprint': typeof ImprintRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/api/og/default': typeof ApiOgDefaultRoute
   '/stacks/company/$slug': typeof StacksCompanySlugRouteWithChildren
   '/stacks/user/$username': typeof StacksUserUsernameRouteWithChildren
   '/api/og/user/$username': typeof ApiOgUserUsernameRoute
@@ -152,6 +161,7 @@ export interface FileRouteTypes {
     | '/imprint'
     | '/privacy'
     | '/terms'
+    | '/api/og/default'
     | '/stacks/company/$slug'
     | '/stacks/user/$username'
     | '/api/og/user/$username'
@@ -168,6 +178,7 @@ export interface FileRouteTypes {
     | '/imprint'
     | '/privacy'
     | '/terms'
+    | '/api/og/default'
     | '/api/og/user/$username'
     | '/stacks/company/$slug/edit'
     | '/stacks/user/$username/edit'
@@ -182,6 +193,7 @@ export interface FileRouteTypes {
     | '/imprint'
     | '/privacy'
     | '/terms'
+    | '/api/og/default'
     | '/stacks/company/$slug'
     | '/stacks/user/$username'
     | '/api/og/user/$username'
@@ -199,6 +211,7 @@ export interface RootRouteChildren {
   ImprintRoute: typeof ImprintRoute
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
+  ApiOgDefaultRoute: typeof ApiOgDefaultRoute
   StacksCompanySlugRoute: typeof StacksCompanySlugRouteWithChildren
   StacksUserUsernameRoute: typeof StacksUserUsernameRouteWithChildren
   ApiOgUserUsernameRoute: typeof ApiOgUserUsernameRoute
@@ -267,6 +280,13 @@ declare module '@tanstack/react-router' {
       path: '/stacks/company/$slug'
       fullPath: '/stacks/company/$slug'
       preLoaderRoute: typeof StacksCompanySlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/og/default': {
+      id: '/api/og/default'
+      path: '/api/og/default'
+      fullPath: '/api/og/default'
+      preLoaderRoute: typeof ApiOgDefaultRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/stacks/user/$username/': {
@@ -341,6 +361,7 @@ const rootRouteChildren: RootRouteChildren = {
   ImprintRoute: ImprintRoute,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
+  ApiOgDefaultRoute: ApiOgDefaultRoute,
   StacksCompanySlugRoute: StacksCompanySlugRouteWithChildren,
   StacksUserUsernameRoute: StacksUserUsernameRouteWithChildren,
   ApiOgUserUsernameRoute: ApiOgUserUsernameRoute,
