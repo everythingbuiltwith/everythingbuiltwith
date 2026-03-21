@@ -128,7 +128,7 @@ function FilterSidebar({
 
   return (
     <aside className="lg:sticky lg:top-24 lg:h-fit">
-      <div className="rounded-xl border border-border/70 bg-card/40 p-4">
+      <div className="rounded-xl border border-border/70 bg-card/40 p-4 sm:p-5">
         <div className="space-y-1">
           <p className="font-semibold text-sm">Search</p>
           <Input
@@ -180,13 +180,13 @@ function FilterSidebar({
             <PopoverTrigger
               render={
                 <Button
-                  className="w-full justify-between"
+                  className="h-auto w-full justify-between gap-2 whitespace-normal py-2.5"
                   type="button"
                   variant="outline"
                 />
               }
             >
-              <span className="truncate text-left">
+              <span className="min-w-0 truncate text-left">
                 {selectedTechnologyLabel}
               </span>
               <ChevronsUpDown className="size-4 text-muted-foreground" />
@@ -340,7 +340,7 @@ function ResultsSection({
   }
 
   return (
-    <section className="space-y-6">
+    <section className="space-y-5 sm:space-y-6">
       {selectedTechnologyPaths.length > 0 ? (
         <div className="flex flex-wrap items-center gap-2">
           <span className="font-medium text-muted-foreground text-xs uppercase tracking-wider">
@@ -374,7 +374,7 @@ function ResultsSection({
       ) : null}
       {totalPages > 1 ? (
         <Pagination>
-          <PaginationContent>
+          <PaginationContent className="gap-2">
             {canGoBack ? (
               <PaginationItem>
                 <PaginationPrevious onClick={onPreviousPage} />
@@ -424,13 +424,13 @@ function ResultsSection({
       ) : null}
       {isCompanyMode && !isSignedIn ? (
         <Show when="signed-out">
-          <div className="rounded-3xl border border-primary/30 bg-primary px-8 py-12 text-primary-foreground md:px-12">
+          <div className="rounded-3xl border border-primary/30 bg-primary px-5 py-10 text-primary-foreground sm:px-8 md:px-12">
             <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
               <div>
                 <p className="font-semibold text-primary-foreground/80 text-sm uppercase tracking-[0.2em]">
                   Unlock all company stacks
                 </p>
-                <h2 className="mt-3 font-bold text-3xl tracking-tight md:text-4xl">
+                <h2 className="mt-3 font-bold text-2xl tracking-tight sm:text-3xl md:text-4xl">
                   Want to see more stacks?
                 </h2>
                 <p className="mt-4 max-w-2xl text-base text-primary-foreground/90 leading-relaxed md:text-lg">
@@ -438,10 +438,10 @@ function ResultsSection({
                   unlock the full list and discover every company profile.
                 </p>
               </div>
-              <div className="mt-8">
+              <div className="mt-8 w-full sm:w-auto">
                 <SignInButton>
                   <Button
-                    className="bg-background font-semibold text-foreground hover:bg-background/90"
+                    className="w-full bg-background font-semibold text-foreground hover:bg-background/90 sm:w-auto"
                     size="lg"
                   >
                     Sign in or register
@@ -573,13 +573,15 @@ export function StackListPage({ mode }: StackListPageProps) {
   };
 
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="container mx-auto px-4 py-10 sm:py-12">
       <div className="space-y-2">
-        <h1 className="font-bold text-3xl">{heading}</h1>
-        <p className="max-w-3xl text-muted-foreground">{subheading}</p>
+        <h1 className="font-bold text-2xl sm:text-3xl">{heading}</h1>
+        <p className="max-w-3xl text-muted-foreground text-sm leading-relaxed sm:text-base">
+          {subheading}
+        </p>
       </div>
 
-      <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[300px_1fr]">
+      <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-[280px_minmax(0,1fr)] lg:gap-8">
         <FilterSidebar
           filterOptions={filterOptionsData}
           isCompanyMode={isCompanyMode}

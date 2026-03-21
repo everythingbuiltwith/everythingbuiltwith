@@ -22,12 +22,12 @@ export const Route = createFileRoute("/blog")({
 
 function BlogPage() {
   return (
-    <div className="container mx-auto px-6 py-14">
+    <div className="container mx-auto px-4 py-10 sm:px-6 sm:py-14">
       <header className="mx-auto max-w-3xl text-center">
-        <h1 className="font-semibold text-4xl tracking-tight md:text-5xl">
+        <h1 className="font-semibold text-3xl tracking-tight sm:text-4xl md:text-5xl">
           Blog
         </h1>
-        <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
+        <p className="mt-4 text-base text-muted-foreground leading-relaxed sm:text-lg">
           Insights around modern tech stacks are coming soon.
         </p>
       </header>

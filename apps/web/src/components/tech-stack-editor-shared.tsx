@@ -750,9 +750,10 @@ export function TechStackEditorShared<PrimaryKey extends string>({
             />
           </div>
           <div className="space-y-2">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
               <Label htmlFor="long-description">Long description</Label>
               <ToggleGroup
+                className="flex-wrap"
                 onValueChange={(values) => {
                   const [first] = values;
                   if (first === "preview" || first === "edit") {
@@ -909,7 +910,7 @@ export function TechStackEditorShared<PrimaryKey extends string>({
             </Button>
           </div>
           <div className="space-y-3">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <Label>Technologies</Label>
               </div>
@@ -1149,7 +1150,7 @@ export function TechStackEditorShared<PrimaryKey extends string>({
                       );
                       return (
                         <div
-                          className="flex items-center justify-between rounded-lg border px-3 py-2"
+                          className="flex flex-col items-start gap-3 rounded-lg border px-3 py-2 sm:flex-row sm:items-center sm:justify-between"
                           key={tech._id}
                         >
                           <div className="flex items-center gap-2">
@@ -1163,7 +1164,7 @@ export function TechStackEditorShared<PrimaryKey extends string>({
                               {tech.name}
                             </span>
                           </div>
-                          <div className="flex items-center gap-2">
+                          <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:justify-end">
                             <Button
                               onClick={() => openDeprecationDialog(tech._id)}
                               size="sm"
@@ -1249,7 +1250,7 @@ export function TechStackEditorShared<PrimaryKey extends string>({
                         );
                         return (
                           <div
-                            className="flex items-center justify-between rounded-lg border border-amber-500/30 bg-amber-500/5 px-3 py-2"
+                            className="flex flex-col items-start gap-3 rounded-lg border border-amber-500/30 bg-amber-500/5 px-3 py-2 sm:flex-row sm:items-center sm:justify-between"
                             key={tech._id}
                           >
                             <div className="space-y-1">
@@ -1271,7 +1272,7 @@ export function TechStackEditorShared<PrimaryKey extends string>({
                                   : ""}
                               </p>
                             </div>
-                            <div className="flex items-center gap-2">
+                            <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:justify-end">
                               <Button
                                 onClick={() => openDeprecationDialog(tech._id)}
                                 size="sm"
@@ -1302,7 +1303,7 @@ export function TechStackEditorShared<PrimaryKey extends string>({
             )}
           </div>
         </CardContent>
-        <CardFooter className="justify-between">
+        <CardFooter className="flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-muted-foreground text-xs">
             Technology changes save automatically
           </p>
@@ -1312,7 +1313,7 @@ export function TechStackEditorShared<PrimaryKey extends string>({
   }
 
   return (
-    <div className="container mx-auto grid gap-6 px-4 py-10 lg:grid-cols-[320px_1fr]">
+    <div className="container mx-auto grid gap-6 px-4 py-8 sm:py-10 lg:grid-cols-[280px_minmax(0,1fr)]">
       <Card className="h-fit">
         <CardHeader>
           <CardTitle>{sidebarTitle}</CardTitle>
@@ -1365,7 +1366,7 @@ export function TechStackEditorShared<PrimaryKey extends string>({
                           )}
                           key={category._id}
                         >
-                          <div className="flex items-center gap-2">
+                          <div className="flex flex-wrap items-center gap-2">
                             <button
                               className="flex-1 rounded-md px-2 py-1 text-left text-sm"
                               onClick={() => setActiveSection(category._id)}
@@ -1419,7 +1420,7 @@ export function TechStackEditorShared<PrimaryKey extends string>({
                         className="rounded-lg border border-transparent px-2 py-1 text-muted-foreground transition-colors hover:bg-muted"
                         key={category._id}
                       >
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-wrap items-center gap-2">
                           <span className="flex-1 rounded-md px-2 py-1 text-left text-sm">
                             {category.name}
                           </span>

@@ -6,7 +6,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { format } from "date-fns";
 import { TechStackCard } from "@/components/tech-stack-card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { staticTitle } from "./__root";
 
 export const Route = createFileRoute("/")({
@@ -24,58 +25,85 @@ const HERO_BORDER_ICONS = [
   { icon: "company/convex", name: "Convex", top: "5%", left: "18%" },
   { icon: "company/linear", name: "Linear", top: "0%", left: "82%" },
   { icon: "company/vercel", name: "Vercel", top: "30%", left: "3%" },
-  { icon: "tech/kubernetes", name: "Next.js", top: "20%", left: "97%" },
-  { icon: "tech/react", name: "Tailwind", top: "60%", left: "0%" },
+  { icon: "tech/kubernetes", name: "Kubernetes", top: "20%", left: "97%" },
+  { icon: "tech/react", name: "React", top: "60%", left: "0%" },
   { icon: "company/sentry", name: "Sentry", top: "70%", left: "100%" },
-  { icon: "tech/tanstack", name: "Supabase", top: "98%", left: "10%" },
+  { icon: "tech/tanstack", name: "Tanstack", top: "98%", left: "10%" },
   { icon: "tech/shadcn", name: "shadcn", top: "98%", left: "90%" },
 ];
 
+const MOBILE_HERO_LOGOS = HERO_BORDER_ICONS.slice(0, 6);
+const FEATURED_COMPANY_SLUGS = ["clerk", "convex", "vercel", "sentry"];
+
 function HeroSection() {
   return (
-    <section className="relative flex min-h-screen w-full items-center overflow-hidden bg-background py-16">
-      <div className="container relative z-10 mx-auto grid w-full grid-cols-1 items-center gap-12 px-6 lg:grid-cols-[1fr_auto] lg:gap-20">
+    <section className="relative flex w-full items-start overflow-hidden bg-background pt-6 pb-12 sm:pt-8 sm:pb-14 md:min-h-screen md:items-center md:py-16">
+      <div className="container relative z-10 mx-auto grid w-full grid-cols-1 items-start gap-8 px-4 sm:px-6 md:gap-12 lg:grid-cols-[1fr_auto] lg:items-center lg:gap-20">
         {/* Left — text */}
-        <div className="flex max-w-2xl flex-col items-start text-left">
-          <h1 className="hero-reveal hero-reveal-1 font-bold text-4xl leading-[1.15] tracking-tight md:text-5xl lg:text-6xl">
+        <div className="flex max-w-2xl flex-col items-start text-left max-md:items-center max-md:text-center">
+          <h1 className="hero-reveal hero-reveal-1 max-w-[12ch] font-bold text-4xl leading-[1.1] tracking-tight sm:text-5xl lg:max-w-none lg:text-6xl">
             Discover What Companies And Users Build With +{" "}
             <span className="text-primary">Why</span>
           </h1>
-          <p className="hero-reveal hero-reveal-2 mt-6 max-w-2xl text-lg text-muted-foreground leading-relaxed">
+          <p className="hero-reveal hero-reveal-2 mt-6 max-w-xl text-base text-muted-foreground leading-relaxed sm:text-lg">
             Explore the tech stacks behind leading companies, alongside
             community-submitted personal stacks from users. Get curated stories,
             practical insights, and the reasons behind every choice.
           </p>
-          <div className="hero-reveal hero-reveal-3 mt-10">
-            <div className="flex gap-4">
+          <div className="hero-reveal hero-reveal-3 mt-10 w-full">
+            <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap max-md:items-stretch">
               <Show when="signed-out">
                 <SignInButton>
-                  <Button size="lg" variant="default">
+                  <Button className="w-full px-6 text-center sm:w-auto" size="lg" variant="default">
                     Login And Explore Stacks Now
                   </Button>
                 </SignInButton>
               </Show>
               <Show when="signed-in">
-                <Link to="/community-stacks">
-                  <Button size="lg" variant="default">
-                    Submit Your Own Stack Now
-                  </Button>
+                <Link
+                  className={buttonVariants({
+                    className: "w-full px-6 text-center sm:w-auto",
+                    size: "lg",
+                    variant: "default",
+                  })}
+                  to="/community-stacks"
+                >
+                  Submit Your Own Stack Now
                 </Link>
               </Show>
             </div>
           </div>
+
+          <div className="mt-12 grid w-full max-w-[17rem] grid-cols-2 gap-3 self-center md:hidden">
+            {MOBILE_HERO_LOGOS.map((item) => (
+              <Card
+                className="aspect-square items-center justify-center border border-border bg-card py-0 shadow-none"
+                key={item.name}
+              >
+                <div className="flex size-full items-center justify-center">
+                  <img
+                    alt={item.name}
+                    className="size-9 object-contain"
+                    height={36}
+                    src={`/icons/${item.icon}.svg`}
+                    width={36}
+                  />
+                </div>
+              </Card>
+            ))}
+          </div>
         </div>
 
         {/* Right — stacked cube SVG with tech icons around it */}
-        <div className="hero-reveal hero-reveal-4 relative shrink-0">
+        <div className="hero-reveal hero-reveal-4 relative mx-auto hidden shrink-0 md:block">
           {/* Thin light effect behind SVG */}
           <div
             aria-hidden
-            className="pointer-events-none absolute top-1/2 left-1/2 h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-secondary/10 blur-3xl md:h-[500px] md:w-[500px] lg:h-[580px] lg:w-[580px]"
+            className="pointer-events-none absolute top-1/2 left-1/2 h-[280px] w-[280px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-secondary/10 blur-3xl sm:h-[420px] sm:w-[420px] md:h-[500px] md:w-[500px] lg:h-[580px] lg:w-[580px]"
           />
           {HERO_BORDER_ICONS.map((item, i) => (
             <div
-              className="absolute z-10 -translate-x-1/2 -translate-y-1/2"
+              className="absolute z-10 -translate-x-1/2 -translate-y-1/2 max-sm:hidden"
               key={item.name}
               style={{
                 top: item.top,
@@ -98,7 +126,7 @@ function HeroSection() {
           ))}
           <svg
             aria-hidden
-            className="pointer-events-none h-[380px] w-[380px] shrink-0 opacity-40 md:h-[450px] md:w-[450px] lg:h-[520px] lg:w-[520px]"
+            className="pointer-events-none h-[280px] w-[280px] shrink-0 opacity-40 sm:h-[380px] sm:w-[380px] md:h-[450px] md:w-[450px] lg:h-[520px] lg:w-[520px]"
             fill="none"
             preserveAspectRatio="xMidYMid meet"
             viewBox="130 30 330 355"
@@ -176,7 +204,7 @@ const REASON_BADGES = [
   "Business & Product Needs",
 ];
 
-const REASON_BADGE_STAIR = ["", "ml-2", "ml-4", "ml-6", "ml-8"];
+const REASON_BADGE_STAIR = ["", "sm:ml-2", "sm:ml-4", "sm:ml-6", "sm:ml-8"];
 
 const FEATURE_CARD_ICONS = [
   { icon: "/icons/tech/go.svg", name: "Golang", top: "30%", left: "10%" },
@@ -219,7 +247,7 @@ function FeaturesSection() {
         aria-hidden="true"
         className="pointer-events-none absolute right-0 bottom-0 left-0 h-52 bg-linear-to-t from-secondary/35 via-secondary/20 to-transparent"
       />
-      <div className="container relative z-10 mx-auto px-6">
+      <div className="container relative z-10 mx-auto px-4 sm:px-6">
         <div className="mx-auto mb-12 max-w-2xl text-center">
           <h2 className="font-bold text-4xl tracking-tight md:text-5xl">
             More than just a list of tools
@@ -275,7 +303,7 @@ function FeaturesSection() {
           </div>
 
           <div className="rounded-xl border border-border bg-card p-5 md:p-6 lg:min-h-[210px]">
-            <div className="grid grid-cols-1 gap-12 md:grid-cols-[1fr_auto] md:items-stretch">
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_auto] md:items-stretch md:gap-12">
               <div>
                 <h3 className="font-bold text-2xl tracking-tight">
                   The <span className="text-primary">Why</span> Behind Every
@@ -286,10 +314,10 @@ function FeaturesSection() {
                   and context that led to the decision.
                 </p>
               </div>
-              <div className="flex flex-col items-start gap-4 md:min-w-[230px]">
+              <div className="flex flex-col items-start gap-3 md:min-w-[230px] md:gap-4">
                 {REASON_BADGES.map((badge, index) => (
                   <Badge
-                    className={REASON_BADGE_STAIR[index] ?? "ml-8"}
+                    className={REASON_BADGE_STAIR[index] ?? "sm:ml-8"}
                     key={badge}
                     variant="secondary"
                   >
@@ -301,7 +329,7 @@ function FeaturesSection() {
           </div>
 
           <div className="rounded-xl border border-border bg-card p-5 md:p-6 lg:col-start-2 lg:min-h-[210px]">
-            <div className="grid grid-cols-1 gap-12 md:grid-cols-[1fr_auto] md:items-start">
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_auto] md:items-start md:gap-12">
               <div>
                 <h3 className="font-bold text-2xl tracking-tight">
                   Stack Evolution Over Time
@@ -347,7 +375,9 @@ function FeaturesSection() {
 
 function FeaturedStacksSection() {
   const { data: featuredCompanies } = useSuspenseQuery(
-    convexQuery(api.queries.getFeaturedCompanyCards, {})
+    convexQuery(api.queries.getCompanyCardsBySlugs, {
+      slugs: FEATURED_COMPANY_SLUGS,
+    })
   );
 
   if (featuredCompanies.length === 0) {
@@ -356,7 +386,7 @@ function FeaturedStacksSection() {
 
   return (
     <section className="relative w-full py-16">
-      <div className="container mx-auto px-6">
+      <div className="container mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-[1fr_auto]">
           <div className="lg:self-center">
             <h2 className="font-bold text-4xl tracking-tight md:text-5xl">
@@ -381,7 +411,7 @@ function FeaturedStacksSection() {
 function GetStartedSection() {
   return (
     <section className="relative w-full py-16">
-      <div className="container mx-auto px-6">
+      <div className="container mx-auto px-4 sm:px-6">
         <div className="rounded-3xl border border-primary/30 bg-primary px-8 py-12 text-primary-foreground md:px-12">
           <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
             <div>

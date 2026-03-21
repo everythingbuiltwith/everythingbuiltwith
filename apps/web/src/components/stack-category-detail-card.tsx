@@ -102,7 +102,7 @@ export function StackCategoryDetailCard({
         </CardTitle>
       </CardHeader>
       <CardContent className="relative flex flex-1 flex-col gap-4 pt-2">
-        <div className="mb-2 flex flex-wrap items-center justify-center gap-6 rounded-lg bg-muted/40 px-4 py-3.5">
+        <div className="mb-2 flex flex-wrap items-center justify-center gap-4 rounded-lg bg-muted/40 px-4 py-3.5 sm:gap-6">
           {technologies.map((tech) => (
             <div className="flex flex-col items-center gap-1" key={tech._id}>
               <div className="flex min-h-10 items-center gap-1.5 text-4xl">
@@ -126,20 +126,20 @@ export function StackCategoryDetailCard({
         </div>
       </CardContent>
       {(hasUpdates || hasLongDescription) && (
-        <CardFooter className="mt-auto flex items-center justify-between gap-3 border-t-0 bg-transparent">
+        <CardFooter className="mt-auto flex flex-col items-stretch gap-3 border-t-0 bg-transparent sm:flex-row sm:items-center sm:justify-between">
           {hasUpdates ? (
             <Sheet>
               <SheetTrigger>
-                <Button size="sm" variant="outline">
+                <Button className="w-full whitespace-normal sm:w-auto" size="sm" variant="outline">
                   <HistoryIcon />
                   {updateCount} past change{updateCount !== 1 ? "s" : ""}
                 </Button>
               </SheetTrigger>
-              <SheetContent className="min-w-[500px]" side="right">
+              <SheetContent className="w-full sm:max-w-lg md:min-w-[500px]" side="right">
                 <SheetHeader>
                   <SheetTitle>Past changes</SheetTitle>
                 </SheetHeader>
-                <div className="relative flex flex-col gap-0 px-4 py-4">
+                <div className="relative flex flex-col gap-0 px-3 py-4 sm:px-4">
                   <div
                     aria-hidden="true"
                     className="absolute top-0 bottom-0 left-6 w-px bg-border"
@@ -182,13 +182,20 @@ export function StackCategoryDetailCard({
                 </div>
                 <SheetFooter>
                   <SheetClose>
-                    <Button variant="secondary">Close</Button>
+                    <Button className="w-full sm:w-auto" variant="secondary">
+                      Close
+                    </Button>
                   </SheetClose>
                 </SheetFooter>
               </SheetContent>
             </Sheet>
           ) : (
-            <Button disabled size="sm" variant="outline">
+            <Button
+              className="w-full whitespace-normal sm:w-auto"
+              disabled
+              size="sm"
+              variant="outline"
+            >
               <HistoryIcon />
               No past changes
             </Button>
@@ -197,7 +204,7 @@ export function StackCategoryDetailCard({
             <Dialog>
               <DialogTrigger asChild>
                 <button
-                  className="inline-flex items-center gap-1.5 font-medium text-primary text-sm hover:underline"
+                  className="inline-flex items-center justify-center gap-1.5 text-center font-medium text-primary text-sm hover:underline sm:justify-start"
                   type="button"
                 >
                   Read full context
