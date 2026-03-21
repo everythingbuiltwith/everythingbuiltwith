@@ -3,6 +3,7 @@ const NAME_PART_SPLIT_REGEX = /\s+/;
 export const OG_IMAGE_WIDTH = 1200;
 export const OG_IMAGE_HEIGHT = 630;
 export const OG_TEASER_ICON_LIMIT = 6;
+export const MAIN_SITE_OG_IMAGE_PATH = "/api/og/default";
 
 export function trimTrailingSlash(value: string): string {
   return value.endsWith("/") ? value.slice(0, -1) : value;
@@ -22,6 +23,10 @@ export function toAbsoluteUrl(
   const base = trimTrailingSlash(siteUrl);
   const path = normalized.startsWith("/") ? normalized : `/${normalized}`;
   return `${base}${path}`;
+}
+
+export function getMainSiteOgImageUrl(siteUrl: string): string | undefined {
+  return toAbsoluteUrl(MAIN_SITE_OG_IMAGE_PATH, siteUrl);
 }
 
 export function getInitials(name: string): string {
