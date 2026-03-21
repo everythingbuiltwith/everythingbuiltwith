@@ -27,58 +27,70 @@ const STATIC_HERO_LOGOS = [
   { icon: "company/sentry", name: "Sentry" },
 ] as const;
 
+let cachedFontPromise:
+  | Promise<{ regular: ArrayBuffer; bold: ArrayBuffer } | undefined>
+  | undefined;
+
 async function loadLocalFont(): Promise<
   { regular: ArrayBuffer; bold: ArrayBuffer } | undefined
 > {
-  const dir = dirname(fileURLToPath(import.meta.url));
-  const bases = [
-    join(dir, "..", "..", "public", "fonts"),
-    join(process.cwd(), "public", "fonts"),
-    join(process.cwd(), "apps", "web", "public", "fonts"),
-  ];
-  const bun =
-    "Bun" in globalThis
-      ? (
-          globalThis as unknown as {
-            Bun: {
-              file: (p: string) => {
-                exists: () => Promise<boolean>;
-                arrayBuffer: () => Promise<ArrayBuffer>;
-              };
-            };
-          }
-        ).Bun
-      : null;
+  if (cachedFontPromise !== undefined) {
+    return cachedFontPromise;
+  }
 
-  const load = async (path: string): Promise<ArrayBuffer | undefined> => {
-    try {
-      if (bun) {
-        const file = bun.file(path);
-        if (await file.exists()) {
-          return await file.arrayBuffer();
+  cachedFontPromise = (async () => {
+    const dir = dirname(fileURLToPath(import.meta.url));
+    const bases = [
+      join(dir, "..", "..", "public", "fonts"),
+      join(process.cwd(), "public", "fonts"),
+      join(process.cwd(), "apps", "web", "public", "fonts"),
+    ];
+    const bun =
+      "Bun" in globalThis
+        ? (
+            globalThis as unknown as {
+              Bun: {
+                file: (p: string) => {
+                  exists: () => Promise<boolean>;
+                  arrayBuffer: () => Promise<ArrayBuffer>;
+                };
+              };
+            }
+          ).Bun
+        : null;
+
+    const load = async (path: string): Promise<ArrayBuffer | undefined> => {
+      try {
+        if (bun) {
+          const file = bun.file(path);
+          if (await file.exists()) {
+            return await file.arrayBuffer();
+          }
+        } else {
+          const buf = await readFile(path);
+          const copy = new Uint8Array(buf.length);
+          copy.set(buf);
+          return copy.buffer;
         }
-      } else {
-        const buf = await readFile(path);
-        const copy = new Uint8Array(buf.length);
-        copy.set(buf);
-        return copy.buffer;
+      } catch {
+        return undefined;
       }
-    } catch {
+
       return undefined;
+    };
+
+    for (const base of bases) {
+      const regular = await load(join(base, "Inter-Regular.ttf"));
+      const bold = await load(join(base, "Inter-Bold.ttf"));
+      if (regular !== undefined && bold !== undefined) {
+        return { regular, bold };
+      }
     }
 
     return undefined;
-  };
+  })();
 
-  for (const base of bases) {
-    const regular = await load(join(base, "Inter-Regular.ttf"));
-    const bold = await load(join(base, "Inter-Bold.ttf"));
-    if (regular !== undefined && bold !== undefined) {
-      return { regular, bold };
-    }
-  }
-
-  return undefined;
+  return cachedFontPromise;
 }
 
 export async function createMainSiteOgResponse(
@@ -114,8 +126,8 @@ export async function createMainSiteOgResponse(
 
     return new Response(body, {
       headers: {
-        "Content-Type": "image/png",
         ...headers,
+        "Content-Type": "image/png",
       },
     });
   } catch (error) {

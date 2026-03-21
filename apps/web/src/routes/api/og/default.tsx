@@ -1,3 +1,4 @@
+import { env } from "@everythingbuiltwith/env/web";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   createMainSiteOgResponse,
@@ -9,9 +10,7 @@ export const Route = createFileRoute("/api/og/default")({
     handlers: {
       GET: async () => {
         try {
-          const siteUrl =
-            process.env.VITE_PUBLIC_SITE_URL ??
-            `http://localhost:${process.env.PORT ?? "3001"}`;
+          const siteUrl = env.VITE_PUBLIC_SITE_URL;
 
           return createMainSiteOgResponse(<MainSiteOgImage siteUrl={siteUrl} />, {
             "Cache-Control": "public, max-age=3600, s-maxage=86400",
