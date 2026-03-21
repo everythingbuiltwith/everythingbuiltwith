@@ -105,6 +105,26 @@ export default function Header() {
     });
   }, [isLoaded, isSignedIn, syncCurrentUserProfile, user]);
 
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const mediaQuery = window.matchMedia("(min-width: 768px)");
+    const closeMobileMenuOnDesktop = () => {
+      if (mediaQuery.matches) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    closeMobileMenuOnDesktop();
+    mediaQuery.addEventListener("change", closeMobileMenuOnDesktop);
+
+    return () => {
+      mediaQuery.removeEventListener("change", closeMobileMenuOnDesktop);
+    };
+  }, []);
+
   const displayName =
     user?.username ??
     user?.fullName ??

@@ -6,7 +6,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { format } from "date-fns";
 import { TechStackCard } from "@/components/tech-stack-card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { staticTitle } from "./__root";
 
@@ -25,10 +25,10 @@ const HERO_BORDER_ICONS = [
   { icon: "company/convex", name: "Convex", top: "5%", left: "18%" },
   { icon: "company/linear", name: "Linear", top: "0%", left: "82%" },
   { icon: "company/vercel", name: "Vercel", top: "30%", left: "3%" },
-  { icon: "tech/kubernetes", name: "Next.js", top: "20%", left: "97%" },
-  { icon: "tech/react", name: "Tailwind", top: "60%", left: "0%" },
+  { icon: "tech/kubernetes", name: "Kubernetes", top: "20%", left: "97%" },
+  { icon: "tech/react", name: "React", top: "60%", left: "0%" },
   { icon: "company/sentry", name: "Sentry", top: "70%", left: "100%" },
-  { icon: "tech/tanstack", name: "Supabase", top: "98%", left: "10%" },
+  { icon: "tech/tanstack", name: "Tanstack", top: "98%", left: "10%" },
   { icon: "tech/shadcn", name: "shadcn", top: "98%", left: "90%" },
 ];
 
@@ -60,10 +60,15 @@ function HeroSection() {
                 </SignInButton>
               </Show>
               <Show when="signed-in">
-                <Link className="w-full sm:w-auto" to="/community-stacks">
-                  <Button className="w-full px-6 text-center sm:w-auto" size="lg" variant="default">
-                    Submit Your Own Stack Now
-                  </Button>
+                <Link
+                  className={buttonVariants({
+                    className: "w-full px-6 text-center sm:w-auto",
+                    size: "lg",
+                    variant: "default",
+                  })}
+                  to="/community-stacks"
+                >
+                  Submit Your Own Stack Now
                 </Link>
               </Show>
             </div>
